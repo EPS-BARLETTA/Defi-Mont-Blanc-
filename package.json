@@ -1,0 +1,10 @@
+{
+  "name": "defi-mont-blanc-vauban",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test scripts/check.mjs",
+    "dev": "node scripts/preview.mjs"
+  }
+}
