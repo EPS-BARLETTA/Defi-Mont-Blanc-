@@ -512,35 +512,60 @@ function teacherPage() {
       <div id="controls" hidden>
         <section class="panel">
           <h2>Séance du jour</h2>
+          <p id="current-date" class="hint"></p>
           <div id="current"></div>
-          <form id="opening" class="form-row">
-            <label>Hauteur d’une voie (m) <input type="number" name="height" value="9" min="1" max="40" inputmode="numeric" required></label>
-            <button class="btn primary">Démarrer la séance</button>
-          </form>
+          <div class="actions teacher-launch">
+            <button class="btn primary" type="button" id="launch-session">Lancer la séance du jour</button>
+            <button class="btn secondary" type="button" id="open-settings">Paramètres</button>
+          </div>
         </section>
-        <details class="panel" id="entry-panel" hidden>
-          <summary>Corriger une séance</summary>
-          <div class="form-row"><label>Séance <select id="entry-session"></select></label></div>
-          <form id="edit-count" class="form-row">
-            <label>Nombre de voies <input name="routes" type="number" min="0" step="1" inputmode="numeric" required></label>
-            <button class="btn">Enregistrer le nombre</button>
-          </form>
-          <form id="edit-height" class="form-row">
-            <label>Hauteur d’une voie (m) <input name="height" type="number" min="1" max="40" inputmode="numeric" required></label>
-            <button class="btn">Enregistrer la hauteur</button>
-            <label class="checkbox"><input name="retroactive" type="checkbox"> Appliquer aussi aux voies déjà saisies</label>
-          </form>
-          <details><summary>Détail des dernières voies</summary><ul class="records" id="entries"></ul></details>
-        </details>
-        <div class="actions"><a class="btn secondary" href="/demo">Tester les bonus</a><button class="btn secondary" id="refresh">Actualiser</button><button class="btn secondary" id="logout">Se déconnecter</button></div>
+        <div class="actions teacher-shortcuts">
+          <button class="btn secondary" type="button" id="open-correction" aria-controls="entry-panel" aria-expanded="false">Corriger</button>
+          <a class="btn secondary" href="/demo">Tester les bonus</a>
+        </div>
+        <section class="panel" id="entry-panel" hidden>
+          <h2>Corriger une séance</h2>
+          <p id="empty-correction" class="hint" hidden>Aucune séance à corriger.</p>
+          <div id="correction-fields">
+            <div class="form-row"><label>Séance <select id="entry-session"></select></label></div>
+            <form id="edit-count" class="form-row">
+              <label>Nombre de voies <input name="routes" type="number" min="0" step="1" inputmode="numeric" required></label>
+              <button class="btn">Enregistrer le nombre</button>
+            </form>
+            <form id="edit-height" class="form-row">
+              <label>Hauteur d’une voie (m) <input name="height" type="number" min="1" max="40" inputmode="numeric" required></label>
+              <button class="btn">Enregistrer la hauteur</button>
+              <label class="checkbox"><input name="retroactive" type="checkbox"> Appliquer aussi aux voies déjà saisies</label>
+            </form>
+            <details><summary>Détail des dernières voies</summary><ul class="records" id="entries"></ul></details>
+          </div>
+        </section>
       </div>
       <p id="teacher-feedback" class="notice" role="status" aria-live="polite"></p>
+      <dialog id="session-settings" aria-labelledby="session-settings-title">
+        <h2 id="session-settings-title">Paramètres de la séance</h2>
+        <form id="session-height" class="form-row">
+          <label>Hauteur d’une voie (m) <input type="number" name="height" min="1" max="40" inputmode="numeric" required></label>
+          <button class="btn primary">Enregistrer</button>
+        </form>
+        <p class="notice" id="settings-feedback" role="status"></p>
+        <div class="actions">
+          <button class="btn secondary" type="button" id="finish-session" hidden>Fermer la séance</button>
+          <button class="btn secondary" type="button" id="close-settings">Retour</button>
+        </div>
+      </dialog>
     </div>`;
   const login = main.querySelector('#login');
   const loginPanel = main.querySelector('#login-panel');
   const controls = main.querySelector('#controls');
-  const opening = main.querySelector('#opening');
   const current = main.querySelector('#current');
+  const currentDate = main.querySelector('#current-date');
+  const launch = main.querySelector('#launch-session');
+  const settings = main.querySelector('#session-settings');
+  const heightForm = main.querySelector('#session-height');
+  const finish = main.querySelector('#finish-session');
+  const correction = main.querySelector('#open-correction');
+  const entryPanel = main.querySelector('#entry-panel');
   const entries = main.querySelector('#entries');
   const feedback = main.querySelector('#teacher-feedback');
   const entrySession = main.querySelector('#entry-session');
@@ -549,11 +574,14 @@ function teacherPage() {
   const date = new Intl.DateTimeFormat('fr-LU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Luxembourg' });
   const clock = new Intl.DateTimeFormat('fr-LU', { timeStyle: 'short', timeZone: 'Europe/Luxembourg' });
   const day = new Intl.DateTimeFormat('fr-LU', { dateStyle: 'short', timeZone: 'Europe/Luxembourg' });
+  const longDay = new Intl.DateTimeFormat('fr-LU', { dateStyle: 'full', timeZone: 'Europe/Luxembourg' });
   const asDate = (str) => new Date(str.replace(' ', 'T') + 'Z');
   let key = '';
   let busy = false;
   let refreshing = false;
   let selectedSession;
+  let activeSession;
+  let nextHeight = 9;
 
   function action(label, handler, style = 'secondary') {
     const button = node('button', label, 'btn ' + style);
@@ -562,17 +590,8 @@ function teacherPage() {
     return button;
   }
 
-  async function copy(value, message) {
-    try {
-      await navigator.clipboard.writeText(value);
-      notice(feedback, message);
-    } catch {
-      notice(feedback, 'À copier : ' + value);
-    }
-  }
-
-  async function mutate(path, body, message) {
-    if (busy || refreshing) return;
+  async function mutate(path, body, message, errorTarget = feedback) {
+    if (busy || refreshing) return false;
     busy = true;
     try {
       const data = await api(path, { key, body });
@@ -582,8 +601,10 @@ function teacherPage() {
       }
       await refresh();
       notice(feedback, message);
+      return true;
     } catch (error) {
-      notice(feedback, error.message, true);
+      notice(errorTarget, error.message, true);
+      return false;
     } finally {
       busy = false;
     }
@@ -606,35 +627,29 @@ function teacherPage() {
       const query = selection ? '?session=' + encodeURIComponent(selection) : '';
       const { sessions, entries: records } = await api('teacher' + query, { key });
       if (requestKey !== key) return;
-      const active = sessions.find((session) => !session.closed_at);
+      activeSession = sessions.find((session) => !session.closed_at);
       loginPanel.hidden = true;
       controls.hidden = false;
-      opening.hidden = !!active;
+      const now = new Date();
+      const today = day.format(now);
+      const shownDate = activeSession ? asDate(activeSession.opened_at) : now;
+      currentDate.textContent = longDay.format(shownDate);
+      launch.textContent = activeSession
+        ? day.format(shownDate) === today ? 'Reprendre la séance du jour' : 'Reprendre la séance ouverte'
+        : 'Lancer la séance du jour';
       current.replaceChildren();
-      if (active) {
-        const url = new URL('/compteur', location.origin);
-        url.hash = active.code;
-        const actions = node('div', '', 'actions');
-        actions.append(
-          action('Passer en mode saisie', () => openCounter(active.code), 'primary'),
-          action('Copier le code', () => copy(active.code, 'Code copié.')),
-          action('Copier le lien élève', () => copy(url.href, 'Lien élève copié.')),
-          action('Fermer la séance', () => {
-            if (confirm('Fermer la saisie pour cette séance ?')) mutate('teacher/close', { id: active.id }, 'Séance fermée.');
-          }),
-        );
-        current.append(node('p', routesText(active.routes) + ' · ' + whole(active.meters) + ' m', 'big'),
-          node('p', active.height + ' m par voie', 'hint'),
-          actions);
+      if (activeSession) {
+        current.append(node('p', routesText(activeSession.routes) + ' · ' + whole(activeSession.meters) + ' m', 'big'));
       } else {
-        const today = day.format(new Date());
         const finished = sessions.find(session => session.closed_at && day.format(asDate(session.closed_at)) === today);
         if (finished) {
           current.append(node('p', 'Dernière séance terminée · ' + routesText(finished.routes) + ' · ' + whole(finished.meters) + ' m', 'hint'));
         }
       }
+      renderHeight();
 
-      main.querySelector('#entry-panel').hidden = !sessions.length;
+      main.querySelector('#empty-correction').hidden = Boolean(sessions.length);
+      main.querySelector('#correction-fields').hidden = !sessions.length;
       entrySession.replaceChildren(...sessions.map((session) => {
         const option = node('option', date.format(asDate(session.opened_at)) + ' · ' + routesText(session.routes) + ' · ' + whole(session.meters) + ' m');
         option.value = session.id;
@@ -664,6 +679,13 @@ function teacherPage() {
     }
   }
 
+  function renderHeight() {
+    current.querySelector('#current-height')?.remove();
+    const height = node('p', (activeSession?.height ?? nextHeight) + ' m par voie', 'hint');
+    height.id = 'current-height';
+    current.append(height);
+  }
+
   login.addEventListener('submit', (event) => {
     event.preventDefault();
     if (refreshing) return;
@@ -676,10 +698,37 @@ function teacherPage() {
     notice(feedback, '');
     refresh();
   });
-  opening.addEventListener('submit', (event) => {
+  launch.addEventListener('click', () => {
+    if (busy || refreshing) return;
+    if (activeSession) openCounter(activeSession.code);
+    else mutate('teacher/open', { height: nextHeight });
+  });
+  main.querySelector('#open-settings').addEventListener('click', () => {
+    heightForm.elements.height.value = activeSession?.height ?? nextHeight;
+    finish.hidden = !activeSession;
+    notice(main.querySelector('#settings-feedback'), '');
+    settings.showModal();
+  });
+  main.querySelector('#close-settings').addEventListener('click', () => settings.close());
+  heightForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    entrySession.value = '';
-    mutate('teacher/open', { height: opening.elements.height.valueAsNumber });
+    if (busy || refreshing) return;
+    const height = heightForm.elements.height.valueAsNumber;
+    if (activeSession) {
+      if (!await mutate('teacher/height', { id: activeSession.id, height }, 'Hauteur mise à jour pour les prochaines voies.', main.querySelector('#settings-feedback'))) return;
+    } else {
+      nextHeight = height;
+      renderHeight();
+    }
+    settings.close();
+  });
+  finish.addEventListener('click', async () => {
+    if (activeSession && confirm('Fermer la saisie pour cette séance ?') &&
+        await mutate('teacher/close', { id: activeSession.id }, 'Séance fermée.', main.querySelector('#settings-feedback'))) settings.close();
+  });
+  correction.addEventListener('click', () => {
+    entryPanel.hidden = !entryPanel.hidden;
+    correction.setAttribute('aria-expanded', String(!entryPanel.hidden));
   });
   editCount.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -695,16 +744,6 @@ function teacherPage() {
     mutate('teacher/height', { id: selectedSession.id, height, retroactive }, 'Hauteur corrigée.');
   });
   entrySession.addEventListener('change', refresh);
-  main.querySelector('#refresh').addEventListener('click', refresh);
-  main.querySelector('#logout').addEventListener('click', () => {
-    key = '';
-    login.reset();
-    current.replaceChildren();
-    controls.hidden = true;
-    loginPanel.hidden = false;
-    notice(feedback, '');
-    login.elements.key.focus();
-  });
 }
 
 const page = location.pathname.replace(/\/$/, '');

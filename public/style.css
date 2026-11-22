@@ -194,3 +194,8 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
   .counter-page #add { min-height: 78px; }
   .counter-page #undo { min-height: 53px; }
 }
+
+#current-date { margin-bottom: 10px; text-transform: capitalize; }
+.teacher-launch > .primary { flex: 1 1 200px; }
+.teacher-shortcuts { margin: 0 0 16px; }
+.teacher-shortcuts > .btn { flex: 1 1 145px; justify-content: center; }
