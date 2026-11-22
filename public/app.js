@@ -319,8 +319,8 @@ function counterPage() {
       <section class="panel" id="count-panel" hidden>
         <h2>Total de la séance</h2>
         <div class="counter-totals" id="my-count">
-          <div><strong id="route-count">0</strong><span id="route-label">voies</span></div>
-          <div><strong id="meter-count">0</strong><span>mètres</span></div>
+          <div class="counter-routes"><strong id="route-count">0</strong><span id="route-label">voies</span></div>
+          <div class="counter-meters"><strong id="meter-count">0</strong><span>mètres</span></div>
         </div>
         <p class="hint" id="height"></p>
         <button class="btn primary wide" id="add">Valider une voie</button>

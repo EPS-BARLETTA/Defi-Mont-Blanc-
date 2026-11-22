@@ -145,9 +145,11 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
 .counter-page #count-panel h2 { font-size: clamp(1rem, 3vw, 1.25rem); letter-spacing: 0; }
 .counter-page #count-panel .actions { justify-content: center; }
 .counter-totals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.counter-totals div { display: grid; align-content: center; gap: 4px; padding: 12px 7px; border-radius: 11px; background: #ebf3f6; }
+.counter-totals div { display: grid; align-content: center; gap: 4px; padding: 12px 7px; border-radius: 11px; background: var(--counter-tint); color: var(--counter-text); }
+.counter-routes { --counter-tint: #eee2fb; --counter-text: #4d257a; }
+.counter-meters { --counter-tint: #d7f3f0; --counter-text: #0d5657; }
 .counter-totals strong { font-size: clamp(2.3rem, 8vw, 4.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
-.counter-totals span { font-size: .95rem; font-weight: 650; color: var(--muted); }
+.counter-totals span { font-size: .95rem; font-weight: 650; }
 .counter-page #height { margin-top: 10px; }
 .counter-page #add:not(:disabled):active { transform: scale(.985); background: #b3e56f; }
 .counter-page .teacher-return { margin-bottom: 12px; }
