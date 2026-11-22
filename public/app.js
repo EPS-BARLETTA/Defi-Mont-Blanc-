@@ -77,7 +77,7 @@ function publicPage(demo = false) {
       <div class="hero-inner">
         <div>
           <p class="overline">Défi collectif</p>
-          <h1>Défi Mont<br>Blanc</h1>
+          <h1 class="map-title"><img src="/logo-defi-mont-blanc.png" width="2172" height="724" alt="Défi Mont Blanc"></h1>
           <p class="intro">À chaque voie réussie, l’AS Escalade Vauban gagne des mètres pour le Mont Blanc et le ZENOS Tour.</p>
           <div class="readout"><strong id="meters">–</strong><span> / 4 807 m</span></div>
           <div class="track" role="progressbar" aria-label="Progression du défi" aria-valuemin="0" aria-valuemax="4807"><div style="width:0%"></div></div>

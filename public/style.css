@@ -102,3 +102,16 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
 .quiz-dossier dd:last-child { margin-bottom:0; }
 .quiz-source { margin:4px 0 8px; }
 #bonus-dialog .dialog-actions { margin-top:16px; }
+
+.hero .map-title {
+  width: min(100%, 370px);
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #f4f7f8;
+}
+
+.map-title img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
