@@ -505,7 +505,7 @@ function teacherPage() {
       <p class="hint">Démarre une séance, puis laisse l’iPad aux élèves pour la saisie.</p>
       <section class="panel" id="login-panel">
         <form id="login" class="form-row">
-          <label>Code professeur <input type="password" name="key" autocomplete="current-password" required></label>
+          <label>Code professeur <input type="password" name="key" inputmode="numeric" autocomplete="current-password" required></label>
           <button class="btn">Se connecter</button>
         </form>
       </section>
@@ -667,7 +667,12 @@ function teacherPage() {
   login.addEventListener('submit', (event) => {
     event.preventDefault();
     if (refreshing) return;
-    key = login.elements.key.value.trim();
+    key = login.elements.key.value.replace(/[\s-]/g, '');
+    if (!/^\d{12}$/.test(key)) {
+      key = '';
+      notice(feedback, 'Entre les 12 chiffres du code professeur.', true);
+      return;
+    }
     notice(feedback, '');
     refresh();
   });

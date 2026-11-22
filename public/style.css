@@ -159,3 +159,36 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
   .counter-page #count-panel { padding: 11px 16px; }
   .counter-page #add { min-height: 60px; }
 }
+
+.counter-page #add {
+  min-height: clamp(96px, 16svh, 152px);
+  font-size: clamp(1.55rem, 4.5vw, 2.7rem);
+  background: #b7ee65;
+  color: #152919;
+}
+
+.counter-page #add:not(:disabled):active { background: #a1db4c; }
+
+.counter-page #undo {
+  min-height: 64px;
+  width: min(100%, 330px);
+  background: #ffd684;
+  color: #452707;
+  border-color: #b87826;
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+}
+
+.counter-page #toggle-fullscreen {
+  min-height: 55px;
+  padding-inline: 19px;
+  background: #c3e9ff;
+  color: #14324c;
+  border-color: #91c9ec;
+}
+
+.counter-page #toggle-fullscreen:focus-visible { outline-color: white; }
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .counter-page #add { min-height: 78px; }
+  .counter-page #undo { min-height: 53px; }
+}
