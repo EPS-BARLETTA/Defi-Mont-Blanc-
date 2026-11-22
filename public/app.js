@@ -99,7 +99,7 @@ function publicPage(demo = false) {
           </div>
           <figcaption>
             <span class="pin-key" id="map-caption">Voie royale du Goûter · repères pour le défi</span><br>
-            Photo de <a href="https://commons.wikimedia.org/wiki/File:Mont_Blanc_-_Go%C3%BBter_route.jpg">Christian / Camptocamp</a>
+            Photo de 2012 · <a href="https://commons.wikimedia.org/wiki/File:Mont_Blanc_-_Go%C3%BBter_route.jpg">Christian / Camptocamp</a>
             · <a href="https://creativecommons.org/licenses/by-sa/2.0/fr/">CC BY-SA 2.0 FR</a> · compression et progression superposée.
           </figcaption>
         </figure>
@@ -109,6 +109,9 @@ function publicPage(demo = false) {
       <div class="section-head"><h2 id="waypoints-heading">La voie royale</h2></div>
       <p class="hint site-intro">Le massif du Mont-Blanc s’étend sur la France, l’Italie et la Suisse. Sur la photo, on suit la voie normale du Goûter, dite voie royale. Les 4 807 m sont l’objectif fixé pour le défi.</p>
       <ul class="waypoints">${waypoint.map(([at, title]) => `<li data-at="${at}"><small>${whole(at)} m</small><span>${title}</span></li>`).join('')}</ul>
+      <p class="hint site-intro refuge-note"><strong>Au Goûter.</strong> L’ancien refuge a été démonté à l’été 2026 et redescendu par hélicoptère. Le refuge actuel, ouvert en 2013, est toujours sur l’itinéraire à 3 835 m.
+        <a href="https://www.saintgervais.com/mairie/actualites/reconstruction-de-l-ancien-refuge-du-gouter-une-premiere-mondiale-qui-entre-dans-sa-derniere-phase/">Source · Saint-Gervais Mont-Blanc</a>
+      </p>
     </section>
     <section class="wrap bonus-section" aria-labelledby="bonus-heading">
       <div class="section-head"><h2 id="bonus-heading">Bonus d’ascension</h2><p id="bonus-count">Une découverte tous les 500 m, puis une au sommet.</p></div>

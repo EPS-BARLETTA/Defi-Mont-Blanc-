@@ -84,3 +84,6 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
 .summit-flag-name { fill:white; font-size:9px; font-weight:800; letter-spacing:.2px; text-anchor:middle; }
 @keyframes plant-flag { from { transform:translateY(-18px); opacity:0; } to { transform:translateY(0); opacity:1; } }
 @media(prefers-reduced-motion:reduce) { .summit-flag:not([hidden]) { animation:none; } }
+
+.refuge-note { margin:14px 0 0; }
+.refuge-note a { display:inline-block; text-underline-offset:3px; }
