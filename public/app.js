@@ -105,19 +105,26 @@ function publicPage(demo = false) {
         </figure>
       </div>
     </section>
-    <section class="wrap" aria-labelledby="waypoints-heading">
-      <div class="section-head"><h2 id="waypoints-heading">La voie royale</h2></div>
-      <p class="hint site-intro">Le massif du Mont-Blanc s’étend sur la France, l’Italie et la Suisse. Sur la photo, on suit la voie normale du Goûter, dite voie royale. Les 4 807 m sont l’objectif fixé pour le défi.</p>
-      <ul class="waypoints">${waypoint.map(([at, title]) => `<li data-at="${at}"><small>${whole(at)} m</small><span>${title}</span></li>`).join('')}</ul>
-      <p class="hint site-intro refuge-note"><strong>Au Goûter.</strong> L’ancien refuge a été démonté à l’été 2026 et redescendu par hélicoptère. Le refuge actuel, ouvert en 2013, est toujours sur l’itinéraire à 3 835 m.
-        <a href="https://www.saintgervais.com/mairie/actualites/reconstruction-de-l-ancien-refuge-du-gouter-une-premiere-mondiale-qui-entre-dans-sa-derniere-phase/">Source · Saint-Gervais Mont-Blanc</a>
-      </p>
-    </section>
-    <section class="wrap bonus-section" aria-labelledby="bonus-heading">
-      <div class="section-head"><h2 id="bonus-heading">Bonus d’ascension</h2><p id="bonus-count">Une découverte tous les 500 m, puis une au sommet.</p></div>
-      <div id="bonus-feature" class="bonus-feature" hidden></div>
-      <details class="bonus-list"><summary>Tous les paliers</summary><div id="bonus-grid" class="bonus-grid"></div></details>
-    </section>
+    <div class="wrap journey">
+      <section class="journey-card route-card" aria-labelledby="waypoints-heading">
+        <div class="journey-heading"><h2 id="waypoints-heading">La voie royale</h2><span>Par le Goûter</span></div>
+        <p class="hint route-intro">La voie normale du Goûter se situe dans le massif du Mont-Blanc, entre la France, l’Italie et la Suisse.</p>
+        <ul class="waypoints">${waypoint.map(([at, title]) => `<li data-at="${at}"><span>${title}</span><small>${whole(at)} m</small></li>`).join('')}</ul>
+        <details class="route-note">
+          <summary>L’ancien refuge du Goûter</summary>
+          <p>L’ancien refuge a été démonté à l’été 2026 et redescendu par hélicoptère. Le refuge actuel, ouvert en 2013, est toujours sur l’itinéraire à 3 835 m.
+            <a href="https://www.saintgervais.com/mairie/actualites/reconstruction-de-l-ancien-refuge-du-gouter-une-premiere-mondiale-qui-entre-dans-sa-derniere-phase/">Saint-Gervais Mont-Blanc</a>
+          </p>
+        </details>
+      </section>
+      <section class="journey-card bonus-section" aria-labelledby="bonus-heading">
+        <div class="journey-heading"><h2 id="bonus-heading">Bonus d’ascension</h2><span id="bonus-count">10 quiz</span></div>
+        <div id="bonus-feature" class="bonus-feature">
+          <p class="overline">Premier bonus</p><h3>500 m</h3><p class="bonus-feature-status" id="bonus-status"></p>
+        </div>
+        <details class="bonus-list"><summary>Tous les paliers</summary><div id="bonus-grid" class="bonus-grid"></div></details>
+      </section>
+    </div>
     <dialog id="bonus-dialog" aria-labelledby="bonus-title">
       <div class="hint" id="bonus-date"></div><h2 id="bonus-title"></h2>
       <div id="bonus-quiz"></div>
@@ -214,7 +221,7 @@ function publicPage(demo = false) {
     return [altitude, altitude === goal ? distance : nearest];
   });
 
-  let highlighted;
+  let highlighted = null;
   function update(data) {
     const meters = Math.min(data.meters, goal);
     const reached = meters === goal;
@@ -245,7 +252,13 @@ function publicPage(demo = false) {
     } else {
       trail.style.strokeDashoffset = distance;
     }
-    main.querySelectorAll('.waypoints li').forEach((li) => { li.dataset.done = meters >= Number(li.dataset.at); });
+    const steps = [...main.querySelectorAll('.waypoints li')];
+    const nextStep = steps.find((step) => Number(step.dataset.at) > meters);
+    steps.forEach((step) => {
+      step.dataset.done = meters >= Number(step.dataset.at);
+      if (step === nextStep) step.setAttribute('aria-current', 'step');
+      else step.removeAttribute('aria-current');
+    });
     cards.forEach((card, i) => {
       const open = meters >= bonus[i].at;
       card.disabled = !open;
@@ -256,17 +269,24 @@ function publicPage(demo = false) {
     const opened = bonus.filter(item => item.at <= meters).length;
     const next = bonus[opened];
     const latest = bonus[opened - 1];
-    main.querySelector('#bonus-count').textContent = next
-      ? 'Prochaine capsule dans ' + whole(next.at - meters) + ' m'
-      : 'Les ' + bonus.length + ' capsules sont débloquées';
+    main.querySelector('#bonus-count').textContent = opened + ' / ' + bonus.length + ' quiz débloqués';
     const feature = main.querySelector('#bonus-feature');
-    feature.hidden = !latest;
-    if (latest && latest !== highlighted) {
-      const read = node('button', 'Jouer le quiz', 'btn primary');
-      read.type = 'button';
-      read.addEventListener('click', () => openBonus(latest));
-      feature.replaceChildren(node('p', whole(latest.at) + ' m · ' + latest.kind, 'overline'), node('h3', latest.title), read);
+    if (latest !== highlighted) {
+      const eyebrow = node('p', latest ? whole(latest.at) + ' m · ' + latest.kind : 'Premier bonus', 'overline');
+      const title = node('h3', latest ? latest.title : whole(next.at) + ' m');
+      const status = node('p', '', 'bonus-feature-status');
+      status.id = 'bonus-status';
+      feature.replaceChildren(eyebrow, title, status);
+      if (latest) {
+        const read = node('button', 'Jouer le quiz', 'btn primary');
+        read.type = 'button';
+        read.addEventListener('click', () => openBonus(latest));
+        feature.append(read);
+      }
     }
+    main.querySelector('#bonus-status').textContent = next
+      ? 'Encore ' + whole(next.at - meters) + ' m pour débloquer le prochain quiz.'
+      : 'Tous les quiz sont disponibles.';
     highlighted = latest;
   }
   if (demo) {
