@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js?v=3';
+import { bonus } from './bonus.js?v=4';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -119,9 +119,8 @@ function publicPage(demo = false) {
       <details class="bonus-list"><summary>Tous les paliers</summary><div id="bonus-grid" class="bonus-grid"></div></details>
     </section>
     <dialog id="bonus-dialog" aria-labelledby="bonus-title">
-      <div class="hint" id="bonus-date"></div><h2 id="bonus-title"></h2><p id="bonus-text"></p>
-      <details id="bonus-answer" hidden><summary>Voir la réponse</summary><p></p></details>
-      <a id="bonus-source" target="_blank" rel="noopener noreferrer"></a>
+      <div class="hint" id="bonus-date"></div><h2 id="bonus-title"></h2>
+      <div id="bonus-quiz"></div>
       <form method="dialog" class="dialog-actions"><button class="btn">Fermer</button></form>
     </dialog>`;
   const trail = main.querySelector('#trail');
@@ -129,17 +128,65 @@ function publicPage(demo = false) {
   trail.style.strokeDasharray = distance;
   trail.style.strokeDashoffset = distance;
   const dialog = main.querySelector('#bonus-dialog');
+  const quiz = main.querySelector('#bonus-quiz');
   function openBonus(item) {
-    main.querySelector('#bonus-date').textContent = [item.kind, item.date].filter(Boolean).join(' · ');
+    main.querySelector('#bonus-date').textContent = whole(item.at) + ' m · ' + item.kind;
     main.querySelector('#bonus-title').textContent = item.title;
-    main.querySelector('#bonus-text').textContent = item.text;
-    const answer = main.querySelector('#bonus-answer');
-    answer.open = false;
-    answer.hidden = !item.answer;
-    answer.querySelector('p').textContent = item.answer ?? '';
-    const source = main.querySelector('#bonus-source');
-    source.href = item.source;
-    source.textContent = 'Lire la source · ' + item.label;
+
+    function reveal() {
+      const result = node('h3', item.dossier ? 'À découvrir' : 'Ressource débloquée', 'quiz-step');
+      result.tabIndex = -1;
+      quiz.replaceChildren(result);
+      if (item.dossier) {
+        const dossier = node('dl', '', 'quiz-dossier');
+        for (const [label, content] of item.dossier) {
+          dossier.append(node('dt', label), node('dd', content));
+        }
+        quiz.append(dossier);
+      }
+      const source = node('a', item.label, 'quiz-source');
+      source.href = item.source;
+      source.target = '_blank';
+      source.rel = 'noopener noreferrer';
+      quiz.append(source);
+      result.focus();
+    }
+
+    function showQuestion(index) {
+      const question = item.questions[index];
+      const last = index === item.questions.length - 1;
+      const progress = node('p', 'Question ' + (index + 1) + ' sur ' + item.questions.length, 'quiz-step');
+      const group = node('fieldset', '', 'quiz-options');
+      const prompt = node('legend', question.prompt);
+      group.append(prompt);
+      const feedback = node('p', '', 'quiz-feedback');
+      feedback.setAttribute('role', 'status');
+      const onward = node('button', last ? (item.dossier ? 'Ouvrir la découverte' : 'Débloquer la ressource') : 'Question suivante', 'btn primary quiz-next');
+      onward.type = 'button';
+      onward.hidden = true;
+      onward.addEventListener('click', () => last ? reveal() : showQuestion(index + 1));
+      let answered = false;
+      const options = question.choices.map((choice, position) => {
+        const option = node('button', choice, 'quiz-option');
+        option.type = 'button';
+        option.addEventListener('click', () => {
+          if (answered) return;
+          answered = true;
+          const correct = position === question.correct;
+          options[question.correct].dataset.result = 'correct';
+          if (!correct) option.dataset.result = 'incorrect';
+          for (const button of options) button.setAttribute('aria-disabled', 'true');
+          feedback.textContent = (correct ? 'Bien joué ! ' : 'La réponse était « ' + question.choices[question.correct] + ' ». ') + question.explain;
+          onward.hidden = false;
+        });
+        group.append(option);
+        return option;
+      });
+      quiz.replaceChildren(progress, group, feedback, onward);
+      if (dialog.open) options[0].focus();
+    }
+
+    showQuestion(0);
     dialog.showModal();
   }
   const cards = bonus.map((item) => {
@@ -204,7 +251,7 @@ function publicPage(demo = false) {
       card.disabled = !open;
       card.dataset.open = open;
       card.querySelector('b').textContent = open ? bonus[i].title : bonus[i].kind;
-      card.querySelector('.state').textContent = open ? 'Lire le bonus' : 'À débloquer';
+      card.querySelector('.state').textContent = open ? 'Jouer le quiz' : 'À débloquer';
     });
     const opened = bonus.filter(item => item.at <= meters).length;
     const next = bonus[opened];
@@ -215,7 +262,7 @@ function publicPage(demo = false) {
     const feature = main.querySelector('#bonus-feature');
     feature.hidden = !latest;
     if (latest && latest !== highlighted) {
-      const read = node('button', 'Lire la capsule', 'btn primary');
+      const read = node('button', 'Jouer le quiz', 'btn primary');
       read.type = 'button';
       read.addEventListener('click', () => openBonus(latest));
       feature.replaceChildren(node('p', whole(latest.at) + ' m · ' + latest.kind, 'overline'), node('h3', latest.title), read);

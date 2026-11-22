@@ -38,7 +38,14 @@ test('compteur collectif, reprise sans doublon et corrections', async () => {
 
 test('les neuf paliers de 500 mètres et le sommet ont une capsule sourcée', () => {
   assert.deepEqual(bonus.map(item => item.at), [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 4807]);
-  assert(bonus.every(item => new URL(item.source).protocol === 'https:' && item.text && item.title));
+  for (const { questions } of bonus) {
+    for (const { prompt, choices, correct, explain } of questions) {
+      assert(prompt && explain);
+      assert.equal(new Set(choices).size, 3);
+      assert(Number.isInteger(correct) && Boolean(choices[correct]));
+    }
+  }
+  assert(bonus.every(item => new URL(item.source).protocol === 'https:' && item.title && item.questions.length >= 1 && item.questions.length <= 2));
 });
 
 test('correction groupée d’une séance clôturée et hauteur avant ou après saisie', async () => {

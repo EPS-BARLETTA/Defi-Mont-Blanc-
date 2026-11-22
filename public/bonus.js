@@ -1,53 +1,129 @@
+const feder = 'https://www.ffme.fr/';
+const ffme = 'FFME';
+
 export const bonus = [
   {
-    at: 500, date: '1786', kind: 'Histoire', title: 'Qui a gravi le Mont Blanc en premier ?',
-    text: 'Le 8 août 1786, Jacques Balmat et le médecin Michel-Gabriel Paccard atteignent le sommet du Mont Blanc. Leur ascension devient un repère dans l’histoire de l’alpinisme.',
-    source: 'https://www.chamonix.com/la-vallee/patrimoine-culture/patrimoine-naturel-de-la-vallee-de-chamonix-mont-blanc/le-mont-blanc', label: 'Chamonix-Mont-Blanc',
+    at: 500, kind: 'Histoire du Mont Blanc', title: 'La première cordée',
+    questions: [{
+      prompt: 'Qui atteint le sommet du Mont Blanc le 8 août 1786 ?',
+      choices: ['Marie Paradis et Henriette d’Angeville', 'Jacques Balmat et Michel-Gabriel Paccard', 'Deux athlètes olympiques'],
+      correct: 1, explain: 'Jacques Balmat et le médecin Michel-Gabriel Paccard signent la première ascension connue du Mont Blanc.',
+    }],
+    source: 'https://www.chamonix.com/nos-inspirations/mont-blanc-alpinisme', label: 'Découvrir les débuts de l’alpinisme · Chamonix',
   },
   {
-    at: 1000, date: '1808 et 1838', kind: 'Pionnières', title: 'Deux femmes au sommet',
-    text: 'Marie Paradis est la première femme connue à atteindre le sommet du Mont Blanc, en 1808. Trente ans plus tard, Henriette d’Angeville organise sa propre expédition et atteint le sommet à son tour.',
-    source: 'https://www.chamonix.com/sites/default/files/media/brochures/DOSSIER%20PRESSE%20200%20ANS.pdf', label: 'Chamonix-Mont-Blanc',
+    at: 1000, kind: 'Pionnières', title: 'Deux femmes au sommet',
+    questions: [{
+      prompt: 'Qui est la première femme connue à avoir gravi le Mont Blanc ?',
+      choices: ['Henriette d’Angeville', 'Janja Garnbret', 'Marie Paradis'],
+      correct: 2, explain: 'Marie Paradis atteint le sommet en 1808. Henriette d’Angeville lui emboîte le pas en 1838, après avoir organisé sa propre expédition.',
+    }],
+    source: 'https://www.chamonix.com/infos-et-services/espace-presse/girl-power-l-alpinisme-au-feminin', label: 'Lire le portrait des pionnières · Chamonix',
   },
   {
-    at: 1500, date: '', kind: 'Les pratiques', title: 'Bloc, difficulté ou vitesse ?',
-    text: 'En bloc, tu grimpes une paroi basse sans corde, au-dessus de tapis. En difficulté, tu grimpes le plus haut possible avec une corde. En vitesse, le chrono départage les grimpeurs.',
-    source: 'https://www.ffme.fr/escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Fédération française de la montagne et de l’escalade',
+    at: 1500, kind: 'Handicap et montagne', title: 'Le Mont Blanc avec une prothèse',
+    questions: [{
+      prompt: 'En 2020, comment Samuel Ferber et Luc Méheux, chacun amputé d’une partie d’une jambe, rejoignent-ils le sommet ?',
+      choices: ['En grimpant avec leurs prothèses', 'En hélicoptère', 'En téléphérique jusqu’au sommet'],
+      correct: 0, explain: 'Ils grimpent avec leurs prothèses. Tous les deux atteignent le sommet le 14 juillet, après s’être préparés avec le Club alpin de Colmar.',
+    }],
+    source: 'https://www.chamonix.net/francais/actualite/amputes-dun-tibia-ils-ont-gravi-le-mont-blanc', label: 'Lire leur récit · Chamonix.net',
   },
   {
-    at: 2000, date: 'De Tokyo à Paris', kind: 'Évolution', title: 'L’escalade change aux Jeux',
-    text: 'À Tokyo, les grimpeurs disputent les trois disciplines dans un seul classement. À Paris en 2024, la vitesse a sa propre médaille, tandis que le bloc et la difficulté restent réunis dans un combiné.',
-    source: 'https://www.lequipe.fr/Escalade/Fiche-guide/Sport/9', label: 'L’Équipe',
+    at: 2000, kind: 'Les disciplines', title: 'À chacun son défi',
+    questions: [
+      {
+        prompt: 'Dans quelle discipline grimpe-t-on sur des parois basses au-dessus de tapis ?',
+        choices: ['La vitesse', 'Le bloc', 'La difficulté'],
+        correct: 1, explain: 'En bloc, il faut réussir quelques mouvements exigeants. En difficulté, on cherche à monter le plus haut possible sur une longue voie, avec une corde.',
+      },
+      {
+        prompt: 'Dans quelle discipline le chronomètre départage-t-il les grimpeurs ?',
+        choices: ['La difficulté', 'Le bloc', 'La vitesse'],
+        correct: 2, explain: 'En vitesse, on grimpe le plus vite possible sur une voie standardisée. C’est la même disposition de prises en compétition.',
+      },
+    ],
+    source: feder + 'escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Voir les trois disciplines · ' + ffme,
   },
   {
-    at: 2500, date: '2023', kind: 'Équipe de France', title: 'Deux Français sur le podium mondial',
-    text: 'Aux Mondiaux de bloc à Berne, Mickaël Mawem décroche l’or et Mejdi Schalck l’argent. Deux Français aux deux premières places du même championnat du monde !',
-    source: 'https://www.ffme.fr/double-historique-mickael-mawem-champion-du-monde-de-bloc-mejdi-schalck-en-argent/', label: 'Fédération française de la montagne et de l’escalade',
+    at: 2500, kind: 'Équipe de France', title: 'Oriane et Mejdi, en argent',
+    questions: [{
+      prompt: 'Aux Mondiaux 2025, dans quelle discipline Oriane Bertone et Mejdi Schalck remportent-ils chacun l’argent ?',
+      choices: ['En bloc', 'En vitesse', 'En difficulté'],
+      correct: 0, explain: 'En bloc, à Séoul. Oriane Bertone et Mejdi Schalck sont tous les deux vice-champions du monde dans leur épreuve.',
+    }],
+    source: feder + 'championnat-du-monde-2025-le-recap/', label: 'Voir les résultats français · ' + ffme,
   },
   {
-    at: 3000, date: 'Tokyo et Paris', kind: 'Au sommet mondial', title: 'Janja Garnbret, deux fois en or',
-    text: 'La Slovène Janja Garnbret gagne l’or aux Jeux de Tokyo, puis à Paris en 2024. Elle excelle en bloc, où chaque mouvement compte, et en difficulté, où il faut tenir sur une longue voie.',
-    source: 'https://www.lequipe.fr/fiche/janja-garnbret/82241', label: 'L’Équipe',
+    at: 3000, kind: 'Champions du monde entier', title: 'Janja et Toby, en or',
+    questions: [{
+      prompt: 'Qui remporte le combiné bloc-difficulté aux Jeux de Paris 2024 ?',
+      choices: ['Marie Paradis et Jacques Balmat', 'Lucie Jarrige et Adam Ondra', 'Janja Garnbret et Toby Roberts'],
+      correct: 2, explain: 'La Slovène Janja Garnbret remporte son deuxième titre olympique. Le Britannique Toby Roberts remporte son premier.',
+    }],
+    source: feder + 'sam-avezou-pare-de-bronze-a-koper/', label: 'Retrouver les champions en Coupe du monde · ' + ffme,
   },
   {
-    at: 3500, date: '2023', kind: 'Para-escalade', title: 'Lucie Jarrige et Solenne Piret',
-    text: 'Les deux Françaises remportent chacune leur catégorie lors d’une Coupe du monde. En para-escalade, les catégories tiennent compte du handicap et de ses effets sur la grimpe.',
-    source: 'https://www.ffme.fr/lucie-jarrige-et-solenne-piret-simposent-a-salt-lake-city/', label: 'Fédération française de la montagne et de l’escalade',
+    at: 3500, kind: 'Évolution du matériel', title: 'Du chanvre à la corde dynamique',
+    questions: [
+      {
+        prompt: 'Quelle fibre naturelle servait autrefois à fabriquer des cordes d’alpinisme ?',
+        choices: ['Le chanvre', 'La soie', 'Le polyester'],
+        correct: 0, explain: 'Le chanvre a longtemps été utilisé. Au XXᵉ siècle, les fibres synthétiques comme le nylon prennent le relais.',
+      },
+      {
+        prompt: 'À quoi sert l’élasticité d’une corde dynamique ?',
+        choices: ['À faire rebondir le grimpeur vers le sommet', 'À amortir le choc d’une chute', 'À rendre le mur moins raide'],
+        correct: 1, explain: 'La corde s’allonge brièvement sous l’effort. Cet allongement aide à amortir le choc.',
+      },
+    ],
+    source: 'https://www.sac-cas.ch/fr/les-alpes/linvention-de-la-corde-moderne-du-chanvre-a-la-fibre-synthetique-18730/', label: 'Voir les photos des anciennes cordes · Club alpin suisse',
   },
   {
-    at: 4000, date: '', kind: 'Montagne et environnement', title: 'Quand un glacier recule',
-    text: 'Près de Chamonix, la Mer de Glace s’amincit et recule. Sur les cartes de l’IGN, compare sa position en 1937 et en 2023 pour voir le changement.',
-    source: 'https://www.ign.fr/publications-de-l-ign/institut/kiosque/publications/atlas_anthropocene/2023/atlas_anthropocene_2023_light.pdf', label: 'Institut national de l’information géographique et forestière',
+    at: 4000, kind: 'Écologie', title: 'Enquête à la Mer de Glace',
+    questions: [
+      {
+        prompt: 'Que veut dire « le glacier recule » ?',
+        choices: ['Toute la glace remonte en haut de la montagne', 'Le glacier change de vallée', 'Le bout du glacier se retrouve plus haut dans la vallée'],
+        correct: 2, explain: 'La glace continue de s’écouler vers le bas. Le front, c’est-à-dire l’extrémité du glacier, recule quand la fonte l’emporte sur l’arrivée de glace à cet endroit.',
+      },
+      {
+        prompt: 'Pourquoi fallait-il ajouter des marches pour rejoindre la Mer de Glace depuis le Montenvers ?',
+        choices: ['La surface de la glace s’est abaissée', 'Le train est devenu plus haut', 'La montagne s’est mise à grandir'],
+        correct: 0, explain: 'Le glacier s’est aminci. Quand sa surface baisse, il faut descendre davantage pour l’atteindre.',
+      },
+    ],
+    dossier: [
+      ['Observer', 'Le front recule et la surface s’abaisse. Ce sont deux changements que l’on peut suivre séparément.'],
+      ['Comprendre', 'La neige accumulée en altitude peut former de la glace. Quand les pertes dues à la fonte dépassent les gains, le glacier perd de la masse.'],
+      ['Mesurer', 'Les chercheurs comparent des photos prises à différentes dates. Au glacier d’Argentière, près de Chamonix, ils utilisent aussi des capteurs pour étudier les mouvements de la glace.'],
+    ],
+    source: 'https://lejournal.cnrs.fr/videos/le-cri-glacant-du-glacier', label: 'Regarder la vidéo du CNRS · 6 min 17',
   },
   {
-    at: 4500, date: '2017', kind: 'Exploit en falaise', title: 'Adam Ondra et le premier 9c',
-    text: 'En Norvège, le Tchèque Adam Ondra réussit la voie « Silence » et propose la cotation 9c, une première mondiale. La cotation indique la difficulté de la voie.',
-    source: 'https://planetgrimpe.com/avec-assez-de-temps-je-peux-enchainer-tous-les-9c-du-monde-jakob-schubert-revient-sur-d-n-a/', label: 'PlanetGrimpe',
+    at: 4500, kind: 'Para-escalade', title: 'Une voix pour guider la grimpe',
+    questions: [{
+      prompt: 'Comment un guide peut-il aider une personne déficiente visuelle à trouver les prises ?',
+      choices: ['En faisant clignoter la lumière de la salle', 'En indiquant leur position à voix haute', 'En secouant la corde à chaque mouvement'],
+      correct: 1, explain: 'Le guide peut décrire à voix haute la direction et la distance des prises. La communication se prépare ensemble.',
+    }],
+    source: feder + 'accueillir-une-personne-deficiente-visuelle-en-escalade/', label: 'Découvrir le guidage · ' + ffme,
   },
   {
-    at: 4807, date: '', kind: 'Défi flash', title: 'À toi de jouer au sommet',
-    text: 'Un mur officiel d’escalade de vitesse mesure-t-il 9 m, 15 m ou 20 m ?',
-    answer: '15 m. C’est 6 m de plus qu’une voie de notre AS.',
-    source: 'https://www.lequipe.fr/Escalade/Fiche-guide/Sport/9', label: 'L’Équipe',
+    at: 4807, kind: 'Défi flash', title: 'Le dernier défi de la cordée',
+    questions: [
+      {
+        prompt: 'En compétition, quelle est la hauteur du mur de vitesse ?',
+        choices: ['9 m', '20 m', '15 m'],
+        correct: 2, explain: '15 m. Le mur officiel de vitesse est standardisé pour que les chronos soient comparables.',
+      },
+      {
+        prompt: 'Le défi fait 4 807 m. À 9 m par voie, combien de voies faut-il au minimum ?',
+        choices: ['534', '535', '536'],
+        correct: 1, explain: '534 voies donnent 4 806 m. Il manquerait un seul mètre ! La 535ᵉ voie fait passer le total à 4 815 m.',
+      },
+    ],
+    dossier: [['Défi à deux', 'En 20 secondes, inventez un nom de cordée et une pose de sommet sur le sol. Présentez-les au groupe !']],
+    source: feder + 'escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Voir le mur de vitesse · ' + ffme,
   },
 ];
