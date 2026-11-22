@@ -73,3 +73,14 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
   .bonus-feature { grid-template-columns:1fr; }
   .bonus-feature button { grid-column:1; grid-row:auto; justify-self:start; }
 }
+
+#bonus-answer { margin:0 0 14px; padding:10px 14px; border:1px solid var(--line); border-radius:9px; }
+#bonus-answer summary { cursor:pointer; font-weight:700; }
+#bonus-answer p { margin:7px 0 0; }
+.summit-flag { transform-box:fill-box; transform-origin:bottom left; }
+.summit-flag:not([hidden]) { animation:plant-flag .45s ease-out both; }
+.summit-pole { fill:none; stroke:white; stroke-width:3; stroke-linecap:round; }
+.summit-pennant { fill:#ab1251; stroke:white; stroke-width:1.2; stroke-linejoin:round; }
+.summit-flag-name { fill:white; font-size:9px; font-weight:800; letter-spacing:.2px; text-anchor:middle; }
+@keyframes plant-flag { from { transform:translateY(-18px); opacity:0; } to { transform:translateY(0); opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .summit-flag:not([hidden]) { animation:none; } }

@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js';
+import { bonus } from './bonus.js?v=3';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -90,6 +90,11 @@ function publicPage(demo = false) {
             <svg viewBox="0 0 720 583" preserveAspectRatio="none" aria-hidden="true">
               <path id="trail" class="route" d="M 178 577 L 141 569 L 104 563 L 88 552 L 105 529 L 125 507 L 143 476 L 154 456 L 177 448 L 192 437 L 193 420 L 188 403 L 195 390 L 210 381 L 212 366 L 211 341 L 208 319 L 202 297 L 194 278 L 188 268 L 211 260 L 244 256 L 273 255 L 299 244 L 320 223 L 349 202 L 379 186 L 410 172 L 432 157 L 458 136 L 477 122 L 499 112 L 512 94 L 530 78 L 520 69 L 505 60"/>
               <circle id="pin" class="pin" cx="178" cy="577" r="6" hidden/>
+              <g id="summit-flag" class="summit-flag" hidden>
+                <path class="summit-pole" d="M505 61V15"/>
+                <path class="summit-pennant" d="M507 17 C528 11 549 23 571 17 L568 32 L572 45 C549 51 528 39 507 45Z"/>
+                <text x="537" y="34" class="summit-flag-name">AS VAUBAN</text>
+              </g>
             </svg>
           </div>
           <figcaption>
@@ -112,6 +117,7 @@ function publicPage(demo = false) {
     </section>
     <dialog id="bonus-dialog" aria-labelledby="bonus-title">
       <div class="hint" id="bonus-date"></div><h2 id="bonus-title"></h2><p id="bonus-text"></p>
+      <details id="bonus-answer" hidden><summary>Voir la réponse</summary><p></p></details>
       <a id="bonus-source" target="_blank" rel="noopener noreferrer"></a>
       <form method="dialog" class="dialog-actions"><button class="btn">Fermer</button></form>
     </dialog>`;
@@ -121,9 +127,13 @@ function publicPage(demo = false) {
   trail.style.strokeDashoffset = distance;
   const dialog = main.querySelector('#bonus-dialog');
   function openBonus(item) {
-    main.querySelector('#bonus-date').textContent = item.date + ' · ' + item.kind;
+    main.querySelector('#bonus-date').textContent = [item.kind, item.date].filter(Boolean).join(' · ');
     main.querySelector('#bonus-title').textContent = item.title;
     main.querySelector('#bonus-text').textContent = item.text;
+    const answer = main.querySelector('#bonus-answer');
+    answer.open = false;
+    answer.hidden = !item.answer;
+    answer.querySelector('p').textContent = item.answer ?? '';
     const source = main.querySelector('#bonus-source');
     source.href = item.source;
     source.textContent = 'Lire la source · ' + item.label;
@@ -157,6 +167,7 @@ function publicPage(demo = false) {
   let highlighted;
   function update(data) {
     const meters = Math.min(data.meters, goal);
+    const reached = meters === goal;
     main.querySelector('#meters').textContent = whole(data.meters);
     const percentage = Math.floor(100 * meters / goal);
     const progress = main.querySelector('.track');
@@ -164,12 +175,14 @@ function publicPage(demo = false) {
     progress.firstElementChild.style.width = percentage + '%';
     const routes = routesText(data.routes);
     const sessions = data.sessions + (data.sessions === 1 ? ' séance' : ' séances');
-    const status = meters >= goal ? 'Sommet atteint !' : whole(goal - meters) + ' m jusqu’au sommet';
+    const status = reached ? 'Sommet atteint !' : whole(goal - meters) + ' m jusqu’au sommet';
     main.querySelector('#meta').replaceChildren(node('strong', status), node('span', demo ? 'Progression simulée' : routes + ' · ' + sessions));
     const pin = main.querySelector('#pin');
     const caption = main.querySelector('#map-caption');
-    caption.textContent = 'Voie royale du Goûter · ' + (meters < 2372 ? whole(2372 - meters) + ' m jusqu’au Nid d’Aigle' : 'progression de l’AS Escalade Vauban');
-    pin.toggleAttribute('hidden', meters < 2372);
+    if (reached) caption.textContent = 'Le drapeau de l’AS Vauban est planté au sommet du Mont Blanc.';
+    else caption.textContent = 'Voie royale du Goûter · ' + (meters < 2372 ? whole(2372 - meters) + ' m jusqu’au Nid d’Aigle' : 'progression de l’AS Escalade Vauban');
+    pin.toggleAttribute('hidden', meters < 2372 || reached);
+    main.querySelector('#summit-flag').toggleAttribute('hidden', !reached);
     if (meters >= 2372) {
       const i = calibration.findIndex(([altitude]) => altitude >= meters);
       const [end, to] = calibration[i];
@@ -241,7 +254,7 @@ function counterPage() {
   main.innerHTML = `
     <div class="app-shell ${ipad ? 'ipad-counter' : ''}">
       <h1>Compteur de voies</h1>
-      <p class="hint">Une voie terminée en difficulté ? Valide-la ici pour ajouter ses mètres au total de l’AS.</p>
+      <p class="hint">Après chaque voie terminée, appuie une seule fois sur le bouton.</p>
       <section class="panel" id="join-panel">
         <form id="join" class="form-row">
           <label>Code de la séance <input name="code" required maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Code donné par le professeur"></label>

@@ -1,12 +1,53 @@
 export const bonus = [
-  { at: 500, date: '1786', kind: 'Alpinisme', title: 'La première ascension du Mont Blanc', text: 'Le 8 août 1786, Jacques Balmat et le médecin Michel-Gabriel Paccard atteignent le sommet. Cette ascension est devenue l’un des grands repères de l’histoire de l’alpinisme.', source: 'https://www.chamonix.com/infos-et-services/espace-presse/chamonix-l-histoire-extraordinaire-mont-blanc-alpinisme', label: 'Chamonix Mont-Blanc' },
-  { at: 1000, date: '1808', kind: 'Pionnières', title: 'Marie Paradis au sommet', text: 'Originaire de la vallée de Chamonix, Marie Paradis travaille comme servante. En 1808, elle devient la première femme connue à atteindre le sommet du Mont Blanc.', source: 'https://www.chamonix.com/sites/default/files/media/brochures/DOSSIER%20PRESSE%20200%20ANS.pdf', label: 'Chamonix Mont-Blanc' },
-  { at: 1500, date: '1838', kind: 'Pionnières', title: 'Henriette d’Angeville prépare son ascension', text: 'Henriette d’Angeville organise sa propre expédition et atteint le sommet du Mont Blanc en 1838. Ses récits et dessins témoignent de sa préparation et de sa manière de vivre la montagne.', source: 'https://publications.americanalpineclub.org/articles/12194933902', label: 'American Alpine Club' },
-  { at: 2000, date: 'XXᵉ siècle', kind: 'Évolution du matériel', title: 'Du chanvre à la corde dynamique', text: 'Les cordes en fibres naturelles, comme le chanvre, ont progressivement cédé la place aux cordes en nylon. Les cordes dynamiques s’allongent sous l’effet d’une chute, ce qui absorbe une partie de son énergie et réduit le choc transmis au grimpeur et au matériel.', source: 'https://theuiaa.org/documents/members/UIAA_1932_-_1982_-_the_first_50_years.pdf', label: 'Union internationale des associations d’alpinisme' },
-  { at: 2500, date: '1992', kind: 'Pionnières', title: 'Catherine Destivelle dans la face nord de l’Eiger', text: 'En plein hiver, Catherine Destivelle gravit seule la face nord de l’Eiger. Cette ascension ouvre sa trilogie hivernale en solitaire, poursuivie aux Grandes Jorasses et au Cervin.', source: 'https://pioletsdor.net/index.php/fr/historique/2020/2020-lifetime-achievement-award', label: 'Piolets d’Or' },
-  { at: 3000, date: 'Massif du Mont-Blanc', kind: 'Géographie', title: 'Une voie entre rocher et neige', text: 'Depuis le Nid d’Aigle, la voie du Goûter rejoint Tête Rousse, franchit le couloir du Goûter, puis passe par le Dôme du Goûter et l’abri Vallot. L’arête des Bosses mène au sommet. Une arête est la ligne de crête qui sépare deux versants.', source: 'https://www.auvergne-rhone-alpes.developpement-durable.gouv.fr/IMG/pdf/20240131-rap-rapport-ig-voienormale-montblanc.pdf', label: 'Inspection générale de l’environnement et du développement durable' },
-  { at: 3500, date: '2011', kind: 'Para-escalade', title: 'Les premiers Mondiaux de para-escalade', text: 'La fédération internationale organise les premiers championnats du monde de para-escalade à Arco, en Italie. Les catégories de compétition prennent en compte les types de handicap et leurs effets sur la grimpe.', source: 'https://worldclimbing2016.com/images/presse/fichier/dossier_presse_ANG_site-vf.pdf', label: 'Dossier des Championnats du monde' },
-  { at: 4000, date: 'Massif du Mont-Blanc', kind: 'Écologie', title: 'La Mer de Glace recule', text: 'Quand un glacier perd plus de glace et de neige qu’il n’en reçoit, il s’amincit. Son extrémité peut alors remonter dans la vallée. Les cartes de l’IGN permettent de comparer la position de la Mer de Glace à différentes dates et d’observer son recul.', source: 'https://www.ign.fr/publications-de-l-ign/institut/kiosque/publications/atlas_anthropocene/2023/atlas_anthropocene_2023_light.pdf', label: 'Institut national de l’information géographique et forestière' },
-  { at: 4500, date: '2023', kind: 'Para-escalade', title: 'Lucie Jarrige et Solenne Piret', text: 'À Salt Lake City, les Françaises Lucie Jarrige et Solenne Piret remportent chacune leur catégorie lors de la première étape de la Coupe du monde de para-escalade 2023.', source: 'https://www.ffme.fr/lucie-jarrige-et-solenne-piret-simposent-a-salt-lake-city/', label: 'Fédération française de la montagne et de l’escalade' },
-  { at: 4807, date: 'LA28', kind: 'Para-escalade', title: 'La para-escalade aux Jeux paralympiques', text: 'La para-escalade figure pour la première fois au programme paralympique de Los Angeles 2028. Huit épreuves sont prévues, avec des catégories pour différents handicaps.', source: 'https://www1.ifsc-climbing.org/paralympics/2028-los-angeles', label: 'World Climbing' },
+  {
+    at: 500, date: '1786', kind: 'Histoire', title: 'Qui a gravi le Mont Blanc en premier ?',
+    text: 'Le 8 août 1786, Jacques Balmat et le médecin Michel-Gabriel Paccard atteignent le sommet du Mont Blanc. Leur ascension devient un repère dans l’histoire de l’alpinisme.',
+    source: 'https://www.chamonix.com/la-vallee/patrimoine-culture/patrimoine-naturel-de-la-vallee-de-chamonix-mont-blanc/le-mont-blanc', label: 'Chamonix-Mont-Blanc',
+  },
+  {
+    at: 1000, date: '1808 et 1838', kind: 'Pionnières', title: 'Deux femmes au sommet',
+    text: 'Marie Paradis est la première femme connue à atteindre le sommet du Mont Blanc, en 1808. Trente ans plus tard, Henriette d’Angeville organise sa propre expédition et atteint le sommet à son tour.',
+    source: 'https://www.chamonix.com/sites/default/files/media/brochures/DOSSIER%20PRESSE%20200%20ANS.pdf', label: 'Chamonix-Mont-Blanc',
+  },
+  {
+    at: 1500, date: '', kind: 'Les pratiques', title: 'Bloc, difficulté ou vitesse ?',
+    text: 'En bloc, tu grimpes une paroi basse sans corde, au-dessus de tapis. En difficulté, tu grimpes le plus haut possible avec une corde. En vitesse, le chrono départage les grimpeurs.',
+    source: 'https://www.ffme.fr/escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Fédération française de la montagne et de l’escalade',
+  },
+  {
+    at: 2000, date: 'De Tokyo à Paris', kind: 'Évolution', title: 'L’escalade change aux Jeux',
+    text: 'À Tokyo, les grimpeurs disputent les trois disciplines dans un seul classement. À Paris en 2024, la vitesse a sa propre médaille, tandis que le bloc et la difficulté restent réunis dans un combiné.',
+    source: 'https://www.lequipe.fr/Escalade/Fiche-guide/Sport/9', label: 'L’Équipe',
+  },
+  {
+    at: 2500, date: '2023', kind: 'Équipe de France', title: 'Deux Français sur le podium mondial',
+    text: 'Aux Mondiaux de bloc à Berne, Mickaël Mawem décroche l’or et Mejdi Schalck l’argent. Deux Français aux deux premières places du même championnat du monde !',
+    source: 'https://www.ffme.fr/double-historique-mickael-mawem-champion-du-monde-de-bloc-mejdi-schalck-en-argent/', label: 'Fédération française de la montagne et de l’escalade',
+  },
+  {
+    at: 3000, date: 'Tokyo et Paris', kind: 'Au sommet mondial', title: 'Janja Garnbret, deux fois en or',
+    text: 'La Slovène Janja Garnbret gagne l’or aux Jeux de Tokyo, puis à Paris en 2024. Elle excelle en bloc, où chaque mouvement compte, et en difficulté, où il faut tenir sur une longue voie.',
+    source: 'https://www.lequipe.fr/fiche/janja-garnbret/82241', label: 'L’Équipe',
+  },
+  {
+    at: 3500, date: '2023', kind: 'Para-escalade', title: 'Lucie Jarrige et Solenne Piret',
+    text: 'Les deux Françaises remportent chacune leur catégorie lors d’une Coupe du monde. En para-escalade, les catégories tiennent compte du handicap et de ses effets sur la grimpe.',
+    source: 'https://www.ffme.fr/lucie-jarrige-et-solenne-piret-simposent-a-salt-lake-city/', label: 'Fédération française de la montagne et de l’escalade',
+  },
+  {
+    at: 4000, date: '', kind: 'Montagne et environnement', title: 'Quand un glacier recule',
+    text: 'Près de Chamonix, la Mer de Glace s’amincit et recule. Sur les cartes de l’IGN, compare sa position en 1937 et en 2023 pour voir le changement.',
+    source: 'https://www.ign.fr/publications-de-l-ign/institut/kiosque/publications/atlas_anthropocene/2023/atlas_anthropocene_2023_light.pdf', label: 'Institut national de l’information géographique et forestière',
+  },
+  {
+    at: 4500, date: '2017', kind: 'Exploit en falaise', title: 'Adam Ondra et le premier 9c',
+    text: 'En Norvège, le Tchèque Adam Ondra réussit la voie « Silence » et propose la cotation 9c, une première mondiale. La cotation indique la difficulté de la voie.',
+    source: 'https://planetgrimpe.com/avec-assez-de-temps-je-peux-enchainer-tous-les-9c-du-monde-jakob-schubert-revient-sur-d-n-a/', label: 'PlanetGrimpe',
+  },
+  {
+    at: 4807, date: '', kind: 'Défi flash', title: 'À toi de jouer au sommet',
+    text: 'Un mur officiel d’escalade de vitesse mesure-t-il 9 m, 15 m ou 20 m ?',
+    answer: '15 m. C’est 6 m de plus qu’une voie de notre AS.',
+    source: 'https://www.lequipe.fr/Escalade/Fiche-guide/Sport/9', label: 'L’Équipe',
+  },
 ];
