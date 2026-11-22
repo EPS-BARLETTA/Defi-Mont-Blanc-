@@ -109,7 +109,7 @@ function publicPage(demo = false) {
       <section class="journey-card route-card" aria-labelledby="waypoints-heading">
         <div class="journey-heading"><h2 id="waypoints-heading">La voie royale</h2><span>Par le Goûter</span></div>
         <p class="hint route-intro">La voie normale du Goûter se situe dans le massif du Mont-Blanc, entre la France, l’Italie et la Suisse.</p>
-        <ul class="waypoints">${waypoint.map(([at, title]) => `<li data-at="${at}"><span>${title}</span><small>${whole(at)} m</small></li>`).join('')}</ul>
+        <ul class="waypoints">${[...waypoint].reverse().map(([at, title]) => `<li data-at="${at}"><span>${title}</span><small>${whole(at)} m</small></li>`).join('')}</ul>
         <details class="route-note">
           <summary>L’ancien refuge du Goûter</summary>
           <p>L’ancien refuge a été démonté à l’été 2026 et redescendu par hélicoptère. Le refuge actuel, ouvert en 2013, est toujours sur l’itinéraire à 3 835 m.
@@ -253,7 +253,7 @@ function publicPage(demo = false) {
       trail.style.strokeDashoffset = distance;
     }
     const steps = [...main.querySelectorAll('.waypoints li')];
-    const nextStep = steps.find((step) => Number(step.dataset.at) > meters);
+    const nextStep = steps.findLast((step) => Number(step.dataset.at) > meters);
     steps.forEach((step) => {
       step.dataset.done = meters >= Number(step.dataset.at);
       if (step === nextStep) step.setAttribute('aria-current', 'step');
