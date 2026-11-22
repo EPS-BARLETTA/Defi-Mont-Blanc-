@@ -9,8 +9,17 @@ const validId = (value) => Number.isSafeInteger(value) && value > 0;
 
 async function authorized(request, secret) {
   if (!secret) return false;
+  let candidate = request.headers.get('X-Teacher-Key') ?? '';
+  const encoded = request.headers.get('X-Teacher-Key-Encoded');
+  if (encoded !== null) {
+    try {
+      candidate = decodeURIComponent(encoded);
+    } catch {
+      return false;
+    }
+  }
   const digest = async (value) => new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)));
-  const [given, expected] = await Promise.all([digest(request.headers.get('X-Teacher-Key') ?? ''), digest(secret)]);
+  const [given, expected] = await Promise.all([digest(candidate), digest(secret)]);
   return given.reduce((diff, byte, index) => diff | (byte ^ expected[index]), 0) === 0;
 }
 

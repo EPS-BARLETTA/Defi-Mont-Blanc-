@@ -17,7 +17,7 @@ const waypoint = [
 async function api(path, { body, key } = {}) {
   const headers = {};
   if (body) headers['Content-Type'] = 'application/json';
-  if (key) headers['X-Teacher-Key'] = key;
+  if (key) headers['X-Teacher-Key-Encoded'] = encodeURIComponent(key);
   let response;
   try {
     response = await fetch('/api/' + path, {
@@ -468,13 +468,13 @@ function teacherPage() {
       </section>
       <div id="controls" hidden>
         <section class="panel">
+          <h2>Séance du jour</h2>
           <div id="current"></div>
           <form id="opening" class="form-row">
             <label>Hauteur d’une voie (m) <input type="number" name="height" value="9" min="1" max="40" inputmode="numeric" required></label>
             <button class="btn primary">Démarrer la séance</button>
           </form>
         </section>
-        <section class="panel"><h2>Séances · ZENOS Tour</h2><p class="hint">Copie les mètres d’une séance fermée pour les reporter dans ZENOS Tour.</p><ul class="records" id="history"></ul></section>
         <details class="panel" id="entry-panel" hidden>
           <summary>Corriger une séance</summary>
           <div class="form-row"><label>Séance <select id="entry-session"></select></label></div>
@@ -498,7 +498,6 @@ function teacherPage() {
   const controls = main.querySelector('#controls');
   const opening = main.querySelector('#opening');
   const current = main.querySelector('#current');
-  const historyList = main.querySelector('#history');
   const entries = main.querySelector('#entries');
   const feedback = main.querySelector('#teacher-feedback');
   const entrySession = main.querySelector('#entry-session');
@@ -506,6 +505,7 @@ function teacherPage() {
   const editHeight = main.querySelector('#edit-height');
   const date = new Intl.DateTimeFormat('fr-LU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Luxembourg' });
   const clock = new Intl.DateTimeFormat('fr-LU', { timeStyle: 'short', timeZone: 'Europe/Luxembourg' });
+  const day = new Intl.DateTimeFormat('fr-LU', { dateStyle: 'short', timeZone: 'Europe/Luxembourg' });
   const asDate = (str) => new Date(str.replace(' ', 'T') + 'Z');
   let key = '';
   let busy = false;
@@ -567,7 +567,7 @@ function teacherPage() {
       loginPanel.hidden = true;
       controls.hidden = false;
       opening.hidden = !!active;
-      current.replaceChildren(node('h2', active ? 'Séance ouverte' : 'Nouvelle séance'));
+      current.replaceChildren();
       if (active) {
         const url = new URL('/compteur', location.origin);
         url.hash = active.code;
@@ -583,24 +583,17 @@ function teacherPage() {
         current.append(node('p', routesText(active.routes) + ' · ' + whole(active.meters) + ' m', 'big'),
           node('p', active.height + ' m par voie', 'hint'),
           actions);
+      } else {
+        const today = day.format(new Date());
+        const finished = sessions.find(session => session.closed_at && day.format(asDate(session.closed_at)) === today);
+        if (finished) {
+          current.append(node('p', 'Dernière séance terminée · ' + routesText(finished.routes) + ' · ' + whole(finished.meters) + ' m', 'hint'));
+        }
       }
 
-      historyList.replaceChildren();
-      for (const session of sessions) {
-        const li = node('li', '');
-        const text = node('div', '');
-        text.append(node('strong', date.format(asDate(session.opened_at))),
-          node('small', routesText(session.routes) + ' · ' + whole(session.meters) + ' m · ' + (session.closed_at ? 'Terminée' : 'En cours')));
-        li.append(text);
-        if (session.closed_at && session.meters > 0) {
-          li.append(action('Copier les mètres', () => copy(String(session.meters), whole(session.meters) + ' m copiés pour ZENOS Tour.')));
-        }
-        historyList.append(li);
-      }
-      if (!sessions.length) historyList.append(node('li', 'Aucune séance enregistrée.'));
       main.querySelector('#entry-panel').hidden = !sessions.length;
       entrySession.replaceChildren(...sessions.map((session) => {
-        const option = node('option', date.format(asDate(session.opened_at)));
+        const option = node('option', date.format(asDate(session.opened_at)) + ' · ' + routesText(session.routes) + ' · ' + whole(session.meters) + ' m');
         option.value = session.id;
         return option;
       }));

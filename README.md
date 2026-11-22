@@ -1,6 +1,6 @@
 # Défi Mont Blanc · AS Escalade Vauban
 
-Suivi collectif du défi de 4 807 m. `/` affiche la page de garde. `/suivi` montre la progression et les capsules. `/demo` simule les paliers dans le navigateur. `/compteur` permet d’ajouter une voie terminée avec un code de séance. `/prof` permet d’ouvrir et fermer les séances, de corriger les saisies et de copier les mètres d’une séance fermée pour les reporter dans ZENOS Tour.
+Suivi collectif du défi de 4 807 m. `/` affiche la page de garde. `/suivi` montre la progression et les capsules. `/demo` simule les paliers dans le navigateur. `/compteur` permet d’ajouter une voie terminée avec un code de séance. `/prof` permet d’ouvrir et fermer une séance et de corriger les saisies.
 
 ## Exploitation
 

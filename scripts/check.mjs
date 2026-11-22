@@ -79,3 +79,13 @@ test('correction groupée d’une séance clôturée et hauteur avant ou après 
   assert((await post('count', { id: 1, expected: 2, routes: 0 })).ok);
   assert.deepEqual(await progress(), { meters: 0, routes: 0, sessions: 0 });
 });
+
+test('code prof accentué et en-tête mal encodé', async () => {
+  const env = { DB: localDb(), TEACHER_KEY: 'Une clé pour la séance' };
+  const attempt = (encoded) => api(new Request('http://localhost/api/teacher', {
+    headers: { 'X-Teacher-Key-Encoded': encoded },
+  }), env, '/api/teacher');
+  assert.equal((await attempt(encodeURIComponent(env.TEACHER_KEY))).status, 200);
+  assert.equal((await attempt(encodeURIComponent('Une cle pour la seance'))).status, 401);
+  assert.equal((await attempt('%E')).status, 401);
+});
