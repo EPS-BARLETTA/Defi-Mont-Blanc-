@@ -6,6 +6,7 @@ const assets = {
   '/bonus.js': ['bonus.js', 'text/javascript; charset=utf-8'],
   '/style.css': ['style.css', 'text/css; charset=utf-8'],
   '/voie-du-gouter.webp': ['voie-du-gouter.webp', 'image/webp'],
+  '/logo-defi-mont-blanc.png': ['logo-defi-mont-blanc.png', 'image/png'],
   '/logo-as-vauban.png': ['logo-as-vauban.png', 'image/png'],
 };
 const embedded = Object.fromEntries(await Promise.all(Object.entries(assets).map(async ([path, [file, type]]) =>
@@ -28,11 +29,11 @@ export default {
         return error('Le compteur partagé est temporairement indisponible.', 503);
       }
     }
-    const page = ['/', '/prof', '/compteur'].includes(path);
+    const page = ['/', '/suivi', '/demo', '/prof', '/compteur'].includes(path);
     const asset = assets[page ? '/' : path];
     if (!asset || !['GET', 'HEAD'].includes(request.method)) return new Response('Page introuvable', { status: 404, headers: security });
     const body = request.method === 'HEAD' ? null : Uint8Array.from(atob(asset.data), char => char.charCodeAt(0));
-    return new Response(body, { headers: { ...security, 'Content-Type': asset.type, 'Cache-Control': page ? 'no-cache' : 'public, max-age=3600', ...(path === '/prof' || path === '/compteur' ? {'X-Robots-Tag': 'noindex'} : {}) } });
+    return new Response(body, { headers: { ...security, 'Content-Type': asset.type, 'Cache-Control': page ? 'no-cache' : 'public, max-age=3600', ...(['/prof', '/compteur', '/demo'].includes(path) ? {'X-Robots-Tag': 'noindex'} : {}) } });
   },
 };
 `;

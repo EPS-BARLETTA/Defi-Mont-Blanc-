@@ -40,3 +40,35 @@ test('les neuf paliers de 500 mètres et le sommet ont une capsule sourcée', ()
   assert.deepEqual(bonus.map(item => item.at), [500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 4807]);
   assert(bonus.every(item => new URL(item.source).protocol === 'https:' && item.text && item.title));
 });
+
+test('correction groupée d’une séance clôturée et hauteur avant ou après saisie', async () => {
+  const env = { DB: localDb(), TEACHER_KEY: 'test-local' };
+  const post = (operation, body, teacher = true) => {
+    const path = '/api/' + (teacher ? 'teacher/' : '') + operation;
+    const headers = { 'Content-Type': 'application/json' };
+    if (teacher) headers['X-Teacher-Key'] = env.TEACHER_KEY;
+    return api(new Request('http://localhost' + path, {
+      method: 'POST', headers, body: JSON.stringify(body),
+    }), env, path);
+  };
+
+  const { code } = await (await post('open', {})).json();
+  const climb = () => post('climb', { id: crypto.randomUUID(), code }, false);
+  const first = await (await climb()).json();
+  assert.equal(first.climb.height, 9);
+  assert.equal(first.totals.meters, 9);
+  assert((await post('height', { id: 1, height: 10 })).ok);
+  assert.equal((await (await climb()).json()).totals.meters, 19);
+  assert((await post('close', { id: 1 })).ok);
+  assert.equal((await post('count', { id: 1, expected: 1, routes: 0 })).status, 409);
+  assert.equal((await post('teacher/count', { id: 1, expected: 2, routes: 0 }, false)).status, 401);
+  assert((await post('count', { id: 1, expected: 2, routes: 5 })).ok);
+  const progress = async () => (await api(new Request('http://localhost/api/progress'), env, '/api/progress')).json();
+  assert.deepEqual(await progress(), { meters: 49, routes: 5, sessions: 1 });
+  assert((await post('count', { id: 1, expected: 5, routes: 2 })).ok);
+  assert.deepEqual(await progress(), { meters: 19, routes: 2, sessions: 1 });
+  assert((await post('height', { id: 1, height: 11, retroactive: true })).ok);
+  assert.deepEqual(await progress(), { meters: 22, routes: 2, sessions: 1 });
+  assert((await post('count', { id: 1, expected: 2, routes: 0 })).ok);
+  assert.deepEqual(await progress(), { meters: 0, routes: 0, sessions: 0 });
+});

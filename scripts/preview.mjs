@@ -5,7 +5,8 @@ import { localDb } from './local-db.mjs';
 execFileSync(process.execPath, ['scripts/build.mjs']);
 const { default: worker } = await import('../dist/server/index.js');
 const env = { DB: localDb(), TEACHER_KEY: 'test-local' };
-const port = Number(process.env.PORT || 3000);
+const portArgument = process.argv.indexOf('--port');
+const port = Number(portArgument > 0 ? process.argv[portArgument + 1] : process.env.PORT || 3000);
 createServer(async (incoming, outgoing) => {
   const hasBody = ['POST', 'PUT', 'PATCH'].includes(incoming.method);
   const request = new Request('http://localhost:' + port + incoming.url, {
