@@ -115,3 +115,47 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
   width: 100%;
   height: auto;
 }
+
+.counter-page {
+  min-height: calc(100svh - 78px);
+  overflow: auto;
+  color: white;
+  background: linear-gradient(90deg, #0c2233ad, #0c2233b0), #0c2233 url('/patchwork-escalade.webp') center / cover no-repeat;
+}
+
+.counter-page:fullscreen,
+.counter-page.counter-expanded { width: 100%; height: 100%; min-height: 100%; }
+.counter-page.counter-expanded { position: fixed; inset: 0; z-index: 10; overscroll-behavior: contain; }
+.counter-page .app-shell { padding-top: clamp(22px, 4vh, 50px); }
+.counter-page .hint, .counter-page .teacher-return { color: #d8e8ed; }
+.counter-page .notice[data-error="true"] { color: #ffd4c7; }
+.counter-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: clamp(18px, 3vh, 35px);
+}
+.counter-logo { display: block; width: clamp(145px, 41vw, 242px); height: auto; padding: 6px 9px; border-radius: 9px; background: #f4f7f8; }
+.counter-fullscreen { border-color: #9db2bd; background: #0c2233; }
+.counter-page .panel { color: var(--ink); border-color: #ffffff80; box-shadow: 0 14px 45px #020b1366; }
+.counter-page .panel .hint { color: var(--muted); }
+.counter-page #count-panel { text-align: center; }
+.counter-page #count-panel h2 { font-size: clamp(1rem, 3vw, 1.25rem); letter-spacing: 0; }
+.counter-page #count-panel .actions { justify-content: center; }
+.counter-totals { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.counter-totals div { display: grid; align-content: center; gap: 4px; padding: 12px 7px; border-radius: 11px; background: #ebf3f6; }
+.counter-totals strong { font-size: clamp(2.3rem, 8vw, 4.4rem); line-height: 1; font-variant-numeric: tabular-nums; }
+.counter-totals span { font-size: .95rem; font-weight: 650; color: var(--muted); }
+.counter-page #height { margin-top: 10px; }
+.counter-page #add:not(:disabled):active { transform: scale(.985); background: #b3e56f; }
+.counter-page .teacher-return { margin-bottom: 12px; }
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .counter-page .app-shell { padding-block: 15px; }
+  .counter-top { margin-bottom: 9px; }
+  .counter-page .app-shell > .hint { margin-bottom: 10px; }
+  .counter-page #count-panel { padding: 11px 16px; }
+  .counter-page #add { min-height: 60px; }
+}

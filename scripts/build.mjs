@@ -6,6 +6,7 @@ const assets = {
   '/bonus.js': ['bonus.js', 'text/javascript; charset=utf-8'],
   '/style.css': ['style.css', 'text/css; charset=utf-8'],
   '/voie-du-gouter.webp': ['voie-du-gouter.webp', 'image/webp'],
+  '/patchwork-escalade.webp': ['patchwork-escalade.webp', 'image/webp'],
   '/logo-defi-mont-blanc.png': ['logo-defi-mont-blanc.png', 'image/png'],
   '/logo-as-vauban.png': ['logo-as-vauban.png', 'image/png'],
 };

@@ -301,10 +301,15 @@ function publicPage(demo = false) {
 
 function counterPage() {
   const ipad = new URLSearchParams(location.search).has('ipad');
+  main.classList.add('counter-page');
   main.innerHTML = `
     <div class="app-shell ${ipad ? 'ipad-counter' : ''}">
+      <div class="counter-top">
+        <img class="counter-logo" src="/logo-defi-mont-blanc.png" width="2172" height="724" alt="Défi Mont Blanc">
+        <button class="btn counter-fullscreen" type="button" id="toggle-fullscreen" aria-pressed="false">Plein écran</button>
+      </div>
       <h1>Compteur de voies</h1>
-      <p class="hint">Après chaque voie terminée, appuie une seule fois sur le bouton.</p>
+      <p class="hint">Une voie terminée ? Un appui sur le bouton.</p>
       <section class="panel" id="join-panel">
         <form id="join" class="form-row">
           <label>Code de la séance <input name="code" required maxlength="9" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="Code donné par le professeur"></label>
@@ -313,7 +318,10 @@ function counterPage() {
       </section>
       <section class="panel" id="count-panel" hidden>
         <h2>Total de la séance</h2>
-        <div class="big" id="my-count">0 voie</div>
+        <div class="counter-totals" id="my-count">
+          <div><strong id="route-count">0</strong><span id="route-label">voies</span></div>
+          <div><strong id="meter-count">0</strong><span>mètres</span></div>
+        </div>
         <p class="hint" id="height"></p>
         <button class="btn primary wide" id="add">Valider une voie</button>
         <div class="actions"><button class="btn secondary" id="undo" disabled>Annuler la dernière saisie</button><button class="btn secondary" id="leave" ${ipad ? 'hidden' : ''}>Changer de séance</button></div>
@@ -328,17 +336,52 @@ function counterPage() {
   const add = main.querySelector('#add');
   const undo = main.querySelector('#undo');
   const leave = main.querySelector('#leave');
+  const fullscreen = main.querySelector('#toggle-fullscreen');
   let session;
   let busy = false;
   let totals;
   let change = 0;
+
+  function fullscreenActive() {
+    return document.fullscreenElement === main || main.classList.contains('counter-expanded');
+  }
+
+  function updateFullscreenButton() {
+    const active = fullscreenActive();
+    fullscreen.textContent = active ? 'Quitter le plein écran' : 'Plein écran';
+    fullscreen.setAttribute('aria-pressed', active);
+  }
+
+  fullscreen.addEventListener('click', async () => {
+    if (document.fullscreenElement === main) {
+      await document.exitFullscreen();
+    } else if (main.classList.contains('counter-expanded')) {
+      main.classList.remove('counter-expanded');
+    } else {
+      try {
+        await main.requestFullscreen();
+      } catch {
+        main.classList.add('counter-expanded');
+      }
+    }
+    updateFullscreenButton();
+  });
+  document.addEventListener('fullscreenchange', updateFullscreenButton);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && main.classList.contains('counter-expanded')) {
+      main.classList.remove('counter-expanded');
+      updateFullscreenButton();
+    }
+  });
 
   function render() {
     joinPanel.hidden = Boolean(session);
     countPanel.hidden = !session;
     if (!session) return;
     const closed = Boolean(totals.closed_at);
-    main.querySelector('#my-count').textContent = routesText(totals.routes) + ' · ' + whole(totals.meters) + ' m';
+    main.querySelector('#route-count').textContent = whole(totals.routes);
+    main.querySelector('#route-label').textContent = totals.routes === 1 ? 'voie' : 'voies';
+    main.querySelector('#meter-count').textContent = whole(totals.meters);
     main.querySelector('#height').textContent = closed ? 'Séance terminée' : 'Chaque voie ajoute ' + totals.height + ' m.';
     add.disabled = busy || closed;
     undo.disabled = busy || closed || !!session.pending || !session.entries.length || !totals.routes;
