@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js?v=6';
+import { bonus } from './bonus.js?v=7';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -158,6 +158,23 @@ function publicPage(demo = false) {
         const figure = node('figure');
         figure.append(photo(item.revealPhoto, captions[item.revealPhoto]), node('figcaption', captions[item.revealPhoto]));
         quiz.append(figure);
+      }
+      if (item.wallGear) {
+        quiz.append(node('h3', 'Sur le mur, que reconnais-tu ?'));
+        const gallery = node('div', '', 'game-tiles');
+        for (const [key, name, detail] of [
+          ['mousqueton', 'Mousqueton', 'Photo du lycée · Un connecteur métallique muni d’un doigt qui s’ouvre.'],
+          ['degaine', 'Dégaine', 'Photo du lycée · Deux mousquetons reliés par une sangle courte.'],
+          ['plaquette', 'Plaquette', 'Schéma · Une pièce métallique fixée à la paroi avec une ouverture pour un mousqueton.'],
+          ['relais', 'Relais', 'Schéma simplifié · En moulinette, la corde passe par le relais en haut de la voie. Sa forme varie selon le site.']
+        ]) {
+          const card = node('details');
+          const summary = node('summary', name);
+          summary.prepend(photo(key, ''));
+          card.append(summary, node('p', detail));
+          gallery.append(card);
+        }
+        quiz.append(gallery);
       }
       if (item.extra) quiz.append(node('p', item.extra));
       if (item.gallery) {

@@ -6,7 +6,7 @@ export const bonus = [
     '5b ou 5c': 'Dans le cinquième degré, on passe de 5a à 5b, puis à 5c. Quel mouvement t’a paru le plus difficile aujourd’hui ?',
     '6a ou plus': 'Une cotation résume la difficulté de la voie. Un passage très court peut donner du fil à retordre, même si tout le début paraît facile.'
   }, unknown: 'La prochaine fois, repère le petit panneau au pied de la voie avec ton prof. Les chiffres et les lettres indiquent la difficulté.' },
-  { at: 1000, revealPhoto: 'baudriers', kind: 'Ta cordée', title: 'Elle passait où, ta corde ?', hint: 'Repense au moment où tu as quitté le sol.', choices: {
+  { at: 1000, wallGear: true, revealPhoto: 'baudriers', kind: 'Ta cordée', title: 'Elle passait où, ta corde ?', hint: 'Repense au moment où tu as quitté le sol.', choices: {
     'Déjà tout en haut': 'Tu grimpais en moulinette ! Le nom fait penser à une poulie. La corde passe par le relais en haut de la voie et te relie à la personne qui t’assure.',
     'Je la montais avec moi': 'Tu décris la grimpe en tête. En moulinette, la corde passe déjà en haut avant le départ. Dans les deux cas, tu fais équipe avec la personne qui t’assure.',
     'Je faisais du bloc': 'En bloc, tu enchaînes quelques mouvements au-dessus de tapis. Change de décor : en moulinette, un relais en haut du mur permet à la corde de relier les deux partenaires.'
@@ -14,10 +14,9 @@ export const bonus = [
   { at: 1500, kind: 'Au pied du mur', title: 'Quel appareil as-tu utilisé pour assurer ?', hint: 'Touche la photo qui ressemble au matériel de ta séance.', choices: {
     'JUL²': 'Le marquage JUL² et le câble vert permettent de repérer cet appareil Edelrid sur la photo.',
     'Appareil noir Black Diamond': 'Observe sa grande ouverture et le petit logo blanc. Il ressemble à un ATC-Pilot.',
-    'Appareil gris près du mousqueton Mammut': 'Le nom Smart HMS est inscrit sur le mousqueton noir. Sur la photo, l’appareil d’assurage est la pièce grise en dessous.',
-    'Tube orange': 'Repère les tubes orange suspendus sur le râtelier avec les mousquetons verts.',
-    'Un autre appareil du râtelier': 'Regarde les différentes silhouettes. Avec ton binôme, retrouve la rangée de ton appareil.'
-  }, photos: ['jul','pilot','smart','tubes','ratelier'], unknown: 'Compare les photos avec ton appareil, puis demande son nom au prof.' },
+    'Appareil gris à poignée noire': 'Reconnais-tu sa poignée noire et ses deux petites ouvertures obliques ? Compare sa silhouette avec le matériel de ta séance.',
+    'Tube orange': 'Regarde la forme du tube orange. Tu peux retrouver les appareils de cette famille sur le râtelier.'
+  }, photos: ['jul','pilot','smart','tubes'], unknown: 'Compare les photos avec ton appareil, puis demande son nom au prof.' },
   { at: 2000, kind: 'Ta corde', title: 'Quel diamètre fait la corde orange de Vauban ?', hint: 'Fais ton pari, puis découvre son étiquette.', choices: {
     '9 mm': 'Un peu plus épaisse !', '10 mm': 'Tu es à un demi-millimètre près !', '10,5 mm': 'Pile ! Tu as trouvé le diamètre.', '11 mm': 'Tu dépasses d’un demi-millimètre.'
   }, unknown: 'La réponse est écrite sur l’emballage.', extra: 'La Beal Wall Master Unicore photographiée mesure 10,5 mm de diamètre et 20 m de long. Autrefois, les cordes étaient en chanvre. Au XXᵉ siècle, le nylon a pris le relais.', revealPhoto: 'corde',
