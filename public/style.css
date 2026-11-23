@@ -272,3 +272,9 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
 .teacher-launch > .primary { flex: 1 1 200px; }
 .teacher-shortcuts { margin: 0 0 16px; }
 .teacher-shortcuts > .btn { flex: 1 1 145px; justify-content: center; }
+
+.game-tiles { display: grid; gap: .6rem; }
+.game-wall { grid-template-columns: repeat(3, minmax(0, 1fr)); background: #e8f2f5; padding: .75rem; border-radius: 1rem; }
+.game-wall .quiz-option { min-width: 0; text-align: center; padding: .65rem .25rem; border-radius: 1.1rem; }
+.quiz-options form { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
+.quiz-options form input { width: 9rem; padding: .7rem; font: inherit; }

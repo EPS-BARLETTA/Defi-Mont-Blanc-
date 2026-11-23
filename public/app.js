@@ -118,7 +118,7 @@ function publicPage(demo = false) {
         </details>
       </section>
       <section class="journey-card bonus-section" aria-labelledby="bonus-heading">
-        <div class="journey-heading"><h2 id="bonus-heading">Bonus d’ascension</h2><span id="bonus-count">10 quiz</span></div>
+        <div class="journey-heading"><h2 id="bonus-heading">Bonus d’ascension</h2><span id="bonus-count">10 défis</span></div>
         <div id="bonus-feature" class="bonus-feature">
           <p class="overline">Premier bonus</p><h3>500 m</h3><p class="bonus-feature-status" id="bonus-status"></p>
         </div>
@@ -193,7 +193,77 @@ function publicPage(demo = false) {
       if (dialog.open) options[0].focus();
     }
 
-    showQuestion(0);
+    const games = {
+      500: { name: 'La date mystère', intro: 'Deux habitants de Chamonix viennent de réussir la première ascension connue. Quelle année écris-tu dans leur carnet ?', number: 1786, unit: 'Année', hint: 'Trois ans avant la Révolution française.' },
+      1000: { name: 'Remonte le temps', intro: 'Touche les trois cordées dans l’ordre de leur arrivée au sommet, de la plus ancienne à la plus récente.', tiles: ['Henriette d’Angeville', 'Balmat et Paccard', 'Marie Paradis'], order: [1, 2, 0], clues: ['1786', '1808', '1838'] },
+      2000: { name: 'Au micro du commentateur', intro: 'À toi de commenter la compétition. Reconnais chaque discipline.', tiles: ['Bloc', 'Vitesse', 'Difficulté'], order: [1, 0, 2], clues: ['« Le chrono tourne, les deux adversaires filent sur des murs identiques ! »', '« Dernier mouvement au-dessus des tapis… les deux mains tiennent la prise finale ! »', '« La corde suit chaque mouvement. Jusqu’à quelle prise ira-t-elle ? »'] },
+      3000: { name: 'Le podium mystère', intro: 'Paris 2024. Retrouve les deux champions olympiques du combiné bloc-difficulté.', tiles: ['Toby Roberts', 'Janja Garnbret', 'Oriane Bertone'], order: [1, 0], clues: ['Podium féminin. Je suis slovène, déjà en or à Tokyo.', 'Podium masculin. Je suis britannique et je décroche mon premier titre olympique.'] },
+      4500: { name: 'À toi de guider', intro: 'À deux sur l’iPad. L’un lit l’indication à voix haute, l’autre touche la prise sur ce petit mur.', tiles: ['↖ Haut gauche', '↑ Haut centre', '↗ Haut droite', '← Milieu gauche', '● Centre', '→ Milieu droite'], order: [2, 3], clues: ['« Pars du centre. La prise est une rangée plus haut, sur ta droite. »', 'Échangez les rôles. « Depuis le centre, reste à la même hauteur et va à gauche. »'] },
+      4807: { name: 'Le mètre qui manque', intro: 'Au pied du mur de Vauban, ta cordée vise 4 807 m. Chaque voie ajoute 9 m. Quel est le plus petit nombre de voies qui permet de planter le drapeau ?', number: 535, unit: 'Nombre de voies', hint: 'Avec 534 voies, le compteur affiche 4 806 m…' }
+    };
+    const game = games[item.at];
+    if (game) {
+      const name = node('p', game.name, 'quiz-step');
+      const prompt = node('p', game.intro);
+      const field = node('fieldset', '', 'quiz-options');
+      const clue = node('legend', game.clues?.[0] || game.unit);
+      field.append(clue);
+      const feedback = node('p', '', 'quiz-feedback');
+      feedback.setAttribute('role', 'status');
+      const next = node('button', 'Découvrir la suite', 'btn primary');
+      next.hidden = true;
+      next.onclick = reveal;
+      function finish(message) {
+        field.disabled = true;
+        feedback.textContent = message;
+        next.hidden = false;
+      }
+      if (game.tiles) {
+        let step = 0;
+        const tiles = node('div', '', 'game-tiles');
+        if (item.at === 4500) tiles.classList.add('game-wall');
+        game.tiles.forEach((label, i) => {
+          const tile = node('button', label, 'quiz-option');
+          tile.onclick = () => {
+            if (i !== game.order[step]) {
+              feedback.textContent = 'Essaie une autre réponse pour cet indice.';
+              return;
+            }
+            tile.disabled = true;
+            tile.dataset.result = 'correct';
+            step++;
+            if (step === game.order.length) finish('Bien joué, la cordée ! ' + item.questions[0].explain);
+            else {
+              clue.textContent = game.clues[step];
+              feedback.textContent = 'Trouvé ! Indice suivant : ' + game.clues[step];
+            }
+          };
+          tiles.append(tile);
+        });
+        field.append(tiles);
+      } else {
+        const form = node('form');
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.inputMode = 'numeric';
+        input.pattern = '[0-9]+';
+        input.required = true;
+        input.setAttribute('aria-label', game.unit);
+        const check = node('button', 'Vérifier', 'btn primary');
+        form.append(input, check);
+        form.onsubmit = event => {
+          event.preventDefault();
+          const guess = Number(input.value);
+          if (guess === game.number) finish(item.questions.at(-1).explain);
+          else {
+            feedback.textContent = (guess < game.number ? 'Essaie un nombre plus grand. ' : 'Essaie un nombre plus petit. ') + game.hint;
+            input.select();
+          }
+        };
+        field.append(form);
+      }
+      quiz.replaceChildren(name, prompt, field, feedback, next);
+    } else showQuestion(0);
     dialog.showModal();
   }
   const cards = bonus.map((item) => {
@@ -264,12 +334,12 @@ function publicPage(demo = false) {
       card.disabled = !open;
       card.dataset.open = open;
       card.querySelector('b').textContent = open ? bonus[i].title : bonus[i].kind;
-      card.querySelector('.state').textContent = open ? 'Jouer le quiz' : 'À débloquer';
+      card.querySelector('.state').textContent = open ? 'Relever le défi' : 'À débloquer';
     });
     const opened = bonus.filter(item => item.at <= meters).length;
     const next = bonus[opened];
     const latest = bonus[opened - 1];
-    main.querySelector('#bonus-count').textContent = opened + ' / ' + bonus.length + ' quiz débloqués';
+    main.querySelector('#bonus-count').textContent = opened + ' / ' + bonus.length + ' défis débloqués';
     const feature = main.querySelector('#bonus-feature');
     if (latest !== highlighted) {
       const eyebrow = node('p', latest ? whole(latest.at) + ' m · ' + latest.kind : 'Premier bonus', 'overline');
@@ -278,15 +348,15 @@ function publicPage(demo = false) {
       status.id = 'bonus-status';
       feature.replaceChildren(eyebrow, title, status);
       if (latest) {
-        const read = node('button', 'Jouer le quiz', 'btn primary');
+        const read = node('button', 'Relever le défi', 'btn primary');
         read.type = 'button';
         read.addEventListener('click', () => openBonus(latest));
         feature.append(read);
       }
     }
     main.querySelector('#bonus-status').textContent = next
-      ? 'Encore ' + whole(next.at - meters) + ' m pour débloquer le prochain quiz.'
-      : 'Tous les quiz sont disponibles.';
+      ? 'Encore ' + whole(next.at - meters) + ' m pour débloquer le prochain défi.'
+      : 'Tous les défis sont disponibles.';
     highlighted = latest;
   }
   if (demo) {
