@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
+import { readdir, mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
 
 const assets = {
   '/': ['index.html', 'text/html; charset=utf-8'],
@@ -10,6 +10,9 @@ const assets = {
   '/logo-defi-mont-blanc.png': ['logo-defi-mont-blanc.png', 'image/png'],
   '/logo-as-vauban.png': ['logo-as-vauban.png', 'image/png'],
 };
+for (const file of await readdir('public/materiel')) {
+  assets['/materiel/' + file] = ['materiel/' + file, 'image/webp'];
+}
 const embedded = Object.fromEntries(await Promise.all(Object.entries(assets).map(async ([path, [file, type]]) =>
   [path, { type, data: (await readFile('public/' + file)).toString('base64') }],
 )));

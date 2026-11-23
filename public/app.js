@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js?v=5';
+import { bonus } from './bonus.js?v=6';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -142,10 +142,23 @@ function publicPage(demo = false) {
 
     const instruction = node('p', item.hint);
     const choices = node('div', '', 'game-tiles');
+    function photo(key, alt) {
+      const img = document.createElement('img');
+      img.src = '/materiel/' + key + '.webp';
+      img.alt = alt;
+      img.className = 'equipment-photo';
+      return img;
+    }
     function discover(label, message) {
       const heading = node('h3', label, 'quiz-step');
       heading.tabIndex = -1;
       quiz.replaceChildren(heading, node('p', message));
+      if (item.revealPhoto) {
+        const captions = { corde: 'Étiquette de la corde orange du lycée', mur: 'Le mur de Vauban pour ton défi en binôme', baudriers: 'Les baudriers de ta cordée au lycée' };
+        const figure = node('figure');
+        figure.append(photo(item.revealPhoto, captions[item.revealPhoto]), node('figcaption', captions[item.revealPhoto]));
+        quiz.append(figure);
+      }
       if (item.extra) quiz.append(node('p', item.extra));
       if (item.gallery) {
         const list = node('dl', '', 'quiz-dossier');
@@ -172,6 +185,8 @@ function publicPage(demo = false) {
     }
     for (const [label, message] of [...Object.entries(item.choices), ['Je ne sais pas', item.unknown]]) {
       const button = node('button', label, 'quiz-option');
+      const key = item.photos?.[Object.keys(item.choices).indexOf(label)];
+      if (key) button.prepend(photo(key, ''));
       button.onclick = () => discover(label === 'Je ne sais pas' ? 'Découverte' : label, message);
       choices.append(button);
     }
