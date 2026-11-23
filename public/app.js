@@ -99,8 +99,8 @@ function publicPage(demo = false) {
           </div>
           <figcaption>
             <span class="pin-key" id="map-caption">Voie royale du Goûter · repères pour le défi</span><br>
-            Photo de 2012 · <a href="https://commons.wikimedia.org/wiki/File:Mont_Blanc_-_Go%C3%BBter_route.jpg">Christian / Camptocamp</a>
-            · <a href="https://creativecommons.org/licenses/by-sa/2.0/fr/">CC BY-SA 2.0 FR</a> · compression et progression superposée.
+            Photo de <a href="https://commons.wikimedia.org/wiki/File:Mont_Blanc_-_Go%C3%BBter_route.jpg">Christian / Camptocamp</a> (2012), adaptée pour le défi
+            · <a href="https://creativecommons.org/licenses/by-sa/2.0/fr/">CC BY-SA 2.0 FR</a>
           </figcaption>
         </figure>
       </div>
