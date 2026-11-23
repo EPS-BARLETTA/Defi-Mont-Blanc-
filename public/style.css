@@ -278,3 +278,10 @@ a.btn { display:inline-flex; align-items:center; text-decoration:none; }
 .game-wall .quiz-option { min-width: 0; text-align: center; padding: .65rem .25rem; border-radius: 1.1rem; }
 .quiz-options form { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; }
 .quiz-options form input { width: 9rem; padding: .7rem; font: inherit; }
+#bonus-dialog { position: fixed; }
+#bonus-date { padding-right: 4rem; }
+.bonus-exit { position: absolute; top: .6rem; right: .7rem; }
+.bonus-exit button { background: transparent; color: #455966; border: none; padding: .65rem; cursor: pointer; }
+.discovery-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.5rem; }
+#bonus-quiz .game-tiles { grid-template-columns: repeat(auto-fit,minmax(min(10rem,100%),1fr)); }
+#bonus-quiz .quiz-option { min-height: 3.3rem; }

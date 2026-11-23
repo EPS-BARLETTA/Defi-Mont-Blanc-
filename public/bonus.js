@@ -1,129 +1,52 @@
-const feder = 'https://www.ffme.fr/';
-const ffme = 'FFME';
-
+// Each choice opens its own discovery immediately. No answers are recorded.
 export const bonus = [
-  {
-    at: 500, kind: 'Histoire du Mont Blanc', title: 'La première cordée',
-    questions: [{
-      prompt: 'Qui atteint le sommet du Mont Blanc le 8 août 1786 ?',
-      choices: ['Marie Paradis et Henriette d’Angeville', 'Jacques Balmat et Michel-Gabriel Paccard', 'Deux athlètes olympiques'],
-      correct: 1, explain: 'Jacques Balmat et le médecin Michel-Gabriel Paccard signent la première ascension connue du Mont Blanc.',
-    }],
-    source: 'https://www.chamonix.com/nos-inspirations/mont-blanc-alpinisme', label: 'Découvrir les débuts de l’alpinisme · Chamonix',
-  },
-  {
-    at: 1000, kind: 'Pionnières', title: 'Deux femmes au sommet',
-    questions: [{
-      prompt: 'Qui est la première femme connue à avoir gravi le Mont Blanc ?',
-      choices: ['Henriette d’Angeville', 'Janja Garnbret', 'Marie Paradis'],
-      correct: 2, explain: 'Marie Paradis atteint le sommet en 1808. Henriette d’Angeville lui emboîte le pas en 1838, après avoir organisé sa propre expédition.',
-    }],
-    source: 'https://www.chamonix.com/infos-et-services/espace-presse/girl-power-l-alpinisme-au-feminin', label: 'Lire le portrait des pionnières · Chamonix',
-  },
-  {
-    at: 1500, kind: 'Handicap et montagne', title: 'Le Mont Blanc avec une prothèse',
-    questions: [{
-      prompt: 'En 2020, comment Samuel Ferber et Luc Méheux, chacun amputé d’une partie d’une jambe, rejoignent-ils le sommet ?',
-      choices: ['En grimpant avec leurs prothèses', 'En hélicoptère', 'En téléphérique jusqu’au sommet'],
-      correct: 0, explain: 'Ils grimpent avec leurs prothèses. Tous les deux atteignent le sommet le 14 juillet, après s’être préparés avec le Club alpin de Colmar.',
-    }],
-    source: 'https://www.chamonix.net/francais/actualite/amputes-dun-tibia-ils-ont-gravi-le-mont-blanc', label: 'Lire leur récit · Chamonix.net',
-  },
-  {
-    at: 2000, kind: 'Les disciplines', title: 'À chacun son défi',
-    questions: [
-      {
-        prompt: 'Dans quelle discipline grimpe-t-on sur des parois basses au-dessus de tapis ?',
-        choices: ['La vitesse', 'Le bloc', 'La difficulté'],
-        correct: 1, explain: 'En bloc, il faut réussir quelques mouvements exigeants. En difficulté, on cherche à monter le plus haut possible sur une longue voie, avec une corde.',
-      },
-      {
-        prompt: 'Dans quelle discipline le chronomètre départage-t-il les grimpeurs ?',
-        choices: ['La difficulté', 'Le bloc', 'La vitesse'],
-        correct: 2, explain: 'En vitesse, on grimpe le plus vite possible sur une voie standardisée. C’est la même disposition de prises en compétition.',
-      },
-    ],
-    source: feder + 'escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Voir les trois disciplines · ' + ffme,
-  },
-  {
-    at: 2500, kind: 'Équipe de France', title: 'Oriane et Mejdi, en argent',
-    questions: [{
-      prompt: 'Aux Mondiaux 2025, dans quelle discipline Oriane Bertone et Mejdi Schalck remportent-ils chacun l’argent ?',
-      choices: ['En bloc', 'En vitesse', 'En difficulté'],
-      correct: 0, explain: 'En bloc, à Séoul. Oriane Bertone et Mejdi Schalck sont tous les deux vice-champions du monde dans leur épreuve.',
-    }],
-    source: feder + 'championnat-du-monde-2025-le-recap/', label: 'Voir les résultats français · ' + ffme,
-  },
-  {
-    at: 3000, kind: 'Champions du monde entier', title: 'Janja et Toby, en or',
-    questions: [{
-      prompt: 'Qui remporte le combiné bloc-difficulté aux Jeux de Paris 2024 ?',
-      choices: ['Marie Paradis et Jacques Balmat', 'Lucie Jarrige et Adam Ondra', 'Janja Garnbret et Toby Roberts'],
-      correct: 2, explain: 'La Slovène Janja Garnbret remporte son deuxième titre olympique. Le Britannique Toby Roberts remporte son premier.',
-    }],
-    source: feder + 'sam-avezou-pare-de-bronze-a-koper/', label: 'Retrouver les champions en Coupe du monde · ' + ffme,
-  },
-  {
-    at: 3500, kind: 'Évolution du matériel', title: 'Du chanvre à la corde dynamique',
-    questions: [
-      {
-        prompt: 'Quelle fibre naturelle servait autrefois à fabriquer des cordes d’alpinisme ?',
-        choices: ['Le chanvre', 'La soie', 'Le polyester'],
-        correct: 0, explain: 'Le chanvre a longtemps été utilisé. Au XXᵉ siècle, les fibres synthétiques comme le nylon prennent le relais.',
-      },
-      {
-        prompt: 'À quoi sert l’élasticité d’une corde dynamique ?',
-        choices: ['À faire rebondir le grimpeur vers le sommet', 'À amortir le choc d’une chute', 'À rendre le mur moins raide'],
-        correct: 1, explain: 'La corde s’allonge brièvement sous l’effort. Cet allongement aide à amortir le choc.',
-      },
-    ],
-    source: 'https://www.sac-cas.ch/fr/les-alpes/linvention-de-la-corde-moderne-du-chanvre-a-la-fibre-synthetique-18730/', label: 'Voir les photos des anciennes cordes · Club alpin suisse',
-  },
-  {
-    at: 4000, kind: 'Écologie', title: 'Enquête à la Mer de Glace',
-    questions: [
-      {
-        prompt: 'Que veut dire « le glacier recule » ?',
-        choices: ['Toute la glace remonte en haut de la montagne', 'Le glacier change de vallée', 'Le bout du glacier se retrouve plus haut dans la vallée'],
-        correct: 2, explain: 'La glace continue de s’écouler vers le bas. Le front, c’est-à-dire l’extrémité du glacier, recule quand la fonte l’emporte sur l’arrivée de glace à cet endroit.',
-      },
-      {
-        prompt: 'Pourquoi fallait-il ajouter des marches pour rejoindre la Mer de Glace depuis le Montenvers ?',
-        choices: ['La surface de la glace s’est abaissée', 'Le train est devenu plus haut', 'La montagne s’est mise à grandir'],
-        correct: 0, explain: 'Le glacier s’est aminci. Quand sa surface baisse, il faut descendre davantage pour l’atteindre.',
-      },
-    ],
-    dossier: [
-      ['Observer', 'Le front recule et la surface s’abaisse. Ce sont deux changements que l’on peut suivre séparément.'],
-      ['Comprendre', 'La neige accumulée en altitude peut former de la glace. Quand les pertes dues à la fonte dépassent les gains, le glacier perd de la masse.'],
-      ['Mesurer', 'Les chercheurs comparent des photos prises à différentes dates. Au glacier d’Argentière, près de Chamonix, ils utilisent aussi des capteurs pour étudier les mouvements de la glace.'],
-    ],
-    source: 'https://lejournal.cnrs.fr/videos/le-cri-glacant-du-glacier', label: 'Regarder la vidéo du CNRS · 6 min 17',
-  },
-  {
-    at: 4500, kind: 'Para-escalade', title: 'Une voix pour guider la grimpe',
-    questions: [{
-      prompt: 'Comment un guide peut-il aider une personne déficiente visuelle à trouver les prises ?',
-      choices: ['En faisant clignoter la lumière de la salle', 'En indiquant leur position à voix haute', 'En secouant la corde à chaque mouvement'],
-      correct: 1, explain: 'Le guide peut décrire à voix haute la direction et la distance des prises. La communication se prépare ensemble.',
-    }],
-    source: feder + 'accueillir-une-personne-deficiente-visuelle-en-escalade/', label: 'Découvrir le guidage · ' + ffme,
-  },
-  {
-    at: 4807, kind: 'Défi flash', title: 'Le dernier défi de la cordée',
-    questions: [
-      {
-        prompt: 'En compétition, quelle est la hauteur du mur de vitesse ?',
-        choices: ['9 m', '20 m', '15 m'],
-        correct: 2, explain: '15 m. Le mur officiel de vitesse est standardisé pour que les chronos soient comparables.',
-      },
-      {
-        prompt: 'Le défi fait 4 807 m. À 9 m par voie, combien de voies faut-il au minimum ?',
-        choices: ['534', '535', '536'],
-        correct: 1, explain: '534 voies donnent 4 806 m. Il manquerait un seul mètre ! La 535ᵉ voie fait passer le total à 4 815 m.',
-      },
-    ],
-    dossier: [['Défi à deux', 'En 20 secondes, inventez un nom de cordée et une pose de sommet sur le sol. Présentez-les au groupe !']],
-    source: feder + 'escalade/structure-artificielle/trois-disciplines-trois-equipements/', label: 'Voir le mur de vitesse · ' + ffme,
-  },
+  { at: 500, kind: 'Ta voie', title: 'Tu viens de grimper quoi ?', hint: 'Choisis la cotation écrite au départ de ta voie.', choices: {
+    '4 ou moins': 'En falaise, deux voies de même cotation peuvent être très différentes. Une dalle demande parfois surtout de trouver où poser les pieds.',
+    '5a': 'Un 5a peut mesurer 9 m au gymnase et être bien plus long en falaise. Le 5a parle de difficulté. Pour connaître la hauteur, il faut une autre information !',
+    '5b ou 5c': 'Dans le cinquième degré, on passe de 5a à 5b, puis à 5c. Quel mouvement t’a paru le plus difficile aujourd’hui ?',
+    '6a ou plus': 'Une cotation résume la difficulté de la voie. Un passage très court peut donner du fil à retordre, même si tout le début paraît facile.'
+  }, unknown: 'La prochaine fois, repère le petit panneau au pied de la voie avec ton prof. Les chiffres et les lettres indiquent la difficulté.' },
+  { at: 1000, kind: 'Ta cordée', title: 'Elle passait où, ta corde ?', hint: 'Repense au moment où tu as quitté le sol.', choices: {
+    'Déjà tout en haut': 'Tu grimpais en moulinette ! Le nom fait penser à une poulie. La corde passe par le relais en haut de la voie et te relie à la personne qui t’assure.',
+    'Je la montais avec moi': 'Tu décris la grimpe en tête. En moulinette, la corde passe déjà en haut avant le départ. Dans les deux cas, tu fais équipe avec la personne qui t’assure.',
+    'Je faisais du bloc': 'En bloc, tu enchaînes quelques mouvements au-dessus de tapis. Change de décor : en moulinette, un relais en haut du mur permet à la corde de relier les deux partenaires.'
+  }, unknown: 'Demande à ton binôme de dessiner le trajet de la corde dans les airs. Si elle passait déjà par le haut au départ, c’était une moulinette.' },
+  { at: 1500, kind: 'Au pied du mur', title: 'Quel appareil as-tu utilisé pour assurer ?', hint: 'Touche le nom que tu reconnais pour ouvrir la galerie.', choices: {
+    GRIGRI: 'Petzl · appareil à came.', BIRDIE: 'Beal · appareil à came.', 'Smart 2.0': 'Mammut · freinage assisté par la géométrie de l’appareil.', REVERSO: 'Petzl · appareil de type tube, à freinage manuel.', 'CLICK UP': 'Climbing Technology · freinage assisté avec le mousqueton.', 'MEGA JUL': 'Edelrid · freinage assisté par la géométrie de l’appareil.'
+  }, unknown: 'Cherche avec ton prof le nom inscrit sur le matériel. Voici six modèles que tu peux rencontrer.', gallery: true,
+    source: 'https://www.petzl.com/FR/fr/Sport/Assureurs--descendeurs/Comment-choisir', label: 'Voir le GRIGRI et le REVERSO en photo' },
+  { at: 2000, kind: 'Ta corde', title: 'À ton avis, ta corde mesure combien de millimètres de diamètre ?', hint: 'Fais une estimation. Le prof pourra te montrer la valeur sur le matériel.', choices: {
+    '9 mm': '9 mm, c’est moins d’un centimètre.', '10 mm': '10 mm, c’est exactement un centimètre.', '11 mm': '11 mm, c’est un peu plus d’un centimètre.'
+  }, unknown: 'À l’œil, difficile de distinguer un millimètre !', extra: 'Autrefois, les cordes étaient en chanvre. Au XXᵉ siècle, le nylon a pris le relais. Une corde dynamique moderne peut s’allonger pour amortir une chute. Le diamètre de la corde de Vauban reste à vérifier avec le prof.',
+    source: 'https://www.sac-cas.ch/fr/les-alpes/linvention-de-la-corde-moderne-du-chanvre-a-la-fibre-synthetique-18730/', label: 'Voir les anciennes cordes' },
+  { at: 2500, kind: 'Tes pieds', title: 'Baskets ou chaussons aujourd’hui ?', hint: 'Regarde tes pieds !', choices: {
+    'En baskets': 'Observe la pointe de ta basket. Compare-la à celle, souvent plus fine, d’un chausson : laquelle masquerait le moins une petite prise ?',
+    'En chaussons': 'Regarde la gomme au bout de ton chausson. On retrouve déjà une semelle lisse sur les « PA », des chaussons mis au point par le grimpeur français Pierre Allain.'
+  }, unknown: 'Un chausson de grimpe se reconnaît notamment à sa semelle en gomme.', extra: 'Il y a plus d’un siècle, certains grimpeurs portaient même des chaussons à semelle de corde. Imagine-les à côté de tes chaussures !',
+    source: 'https://www.sac-cas.ch/fr/les-alpes/chaussons-de-contrebandier-27079/', label: 'Voir une paire ancienne' },
+  { at: 3000, kind: 'Histoires de cordées', title: 'Au sommet, à qui tends-tu le micro ?', hint: 'Choisis la cordée dont tu veux entendre l’histoire en premier.', choices: {
+    'Aux premiers arrivés': '1786. Jacques Balmat et Michel-Gabriel Paccard réalisent la première ascension connue du mont Blanc.',
+    'À une pionnière': '1808. Marie Paradis devient la première femme connue à atteindre le sommet du mont Blanc.',
+    'À Samuel et Luc': '2020. Samuel Ferber et Luc Méheux, chacun amputé d’une partie d’une jambe, atteignent le sommet avec leurs prothèses après une préparation au Club alpin de Colmar.'
+  }, unknown: 'Trois récits, un même sommet. Choisis un portrait à raconter à ton binôme.', gallery: true,
+    source: 'https://www.chamonix.net/francais/actualite/amputes-dun-tibia-ils-ont-gravi-le-mont-blanc', label: 'Lire le récit de Samuel et Luc' },
+  { at: 3500, kind: 'Ton style', title: 'Quelle épreuve aimerais-tu commenter ?', hint: 'Choisis ton terrain, puis lis la réplique à ton binôme comme à la radio.', choices: {
+    'Le bloc': '« Les pieds quittent le tapis… une main, puis deux sur la prise finale ! » À toi de rejouer le commentaire au ralenti.',
+    'La vitesse': '« Même mur, mêmes prises… qui touchera le sommet en premier ? » Invente les trois dernières secondes de la finale.',
+    'La difficulté': '« Encore une prise ! Jusqu’où ira-t-elle sur cette longue voie ? » Fais monter le suspense sans prononcer le mot « grimper ».'
+  }, unknown: 'Essaie la vitesse : commente une finale imaginaire en cinq mots !' },
+  { at: 4000, kind: 'Mission glacier', title: 'Tu as deux photos du même glacier. Tu regardes quoi ?', hint: 'Choisis un indice à suivre dans le paysage.', choices: {
+    'Le bout du glacier': 'Bien vu : tu peux repérer le front du glacier par rapport à un rocher fixe et voir si son extrémité a reculé.',
+    'La hauteur de la glace': 'Bonne piste : à la Mer de Glace, la surface s’est abaissée. Depuis le Montenvers, il fallait descendre toujours plus de marches pour la rejoindre.'
+  }, unknown: 'Choisis un gros rocher immobile comme repère. Sur les deux photos, où arrive la glace par rapport à lui ?',
+    source: 'https://lejournal.cnrs.fr/videos/le-cri-glacant-du-glacier', label: 'Voir le glacier avec les chercheurs' },
+  { at: 4500, kind: 'À deux', title: 'Peux-tu faire trouver une prise sans la montrer ?', hint: 'Au sol, choisissez vos rôles devant le mur.', choices: {
+    'Je donne les indices': 'Choisis une prise des yeux. Donne sa couleur et un indice de position, les mains dans le dos. Ton binôme arrive-t-il à la montrer du premier coup ?',
+    'Je cherche la prise': 'Ton binôme choisit une prise et te donne deux indices. Si tu hésites, pose une seule question. Puis échangez les rôles.'
+  }, unknown: 'Commencez par trois prises proches du sol. Une personne en choisit une, l’autre la retrouve grâce à ses indices.' },
+  { at: 4807, kind: 'Au sommet', title: 'Le drapeau Vauban est planté ! Comment fêtez-vous ça ?', hint: 'Choisissez un défi à faire en cordée, les pieds au sol.', choices: {
+    'Une pose de sommet': 'À deux, dessinez une montagne avec vos bras. Le reste du groupe a trois secondes pour copier votre pose.',
+    'Un cri de cordée': 'Inventez un cri en trois mots. Il doit contenir « Vauban » et faire sourire votre binôme.',
+    'Un reportage express': 'Tu as dix secondes au micro imaginaire : annonce le sommet et raconte un geste de ton binôme qui t’a aidé à y arriver.'
+  }, unknown: 'À tour de rôle, terminez cette phrase : « Sans ma cordée, je n’aurais pas… »' }
 ];

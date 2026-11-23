@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js?v=4';
+import { bonus } from './bonus.js?v=5';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -128,7 +128,7 @@ function publicPage(demo = false) {
     <dialog id="bonus-dialog" aria-labelledby="bonus-title">
       <div class="hint" id="bonus-date"></div><h2 id="bonus-title"></h2>
       <div id="bonus-quiz"></div>
-      <form method="dialog" class="dialog-actions"><button class="btn">Fermer</button></form>
+      <form method="dialog" class="bonus-exit"><button aria-label="Quitter le bonus">Quitter</button></form>
     </dialog>`;
   const trail = main.querySelector('#trail');
   const distance = trail.getTotalLength();
@@ -140,130 +140,42 @@ function publicPage(demo = false) {
     main.querySelector('#bonus-date').textContent = whole(item.at) + ' m · ' + item.kind;
     main.querySelector('#bonus-title').textContent = item.title;
 
-    function reveal() {
-      const result = node('h3', item.dossier ? 'À découvrir' : 'Ressource débloquée', 'quiz-step');
-      result.tabIndex = -1;
-      quiz.replaceChildren(result);
-      if (item.dossier) {
-        const dossier = node('dl', '', 'quiz-dossier');
-        for (const [label, content] of item.dossier) {
-          dossier.append(node('dt', label), node('dd', content));
+    const instruction = node('p', item.hint);
+    const choices = node('div', '', 'game-tiles');
+    function discover(label, message) {
+      const heading = node('h3', label, 'quiz-step');
+      heading.tabIndex = -1;
+      quiz.replaceChildren(heading, node('p', message));
+      if (item.extra) quiz.append(node('p', item.extra));
+      if (item.gallery) {
+        const list = node('dl', '', 'quiz-dossier');
+        for (const [name, detail] of Object.entries(item.choices)) {
+          list.append(node('dt', name), node('dd', detail));
         }
-        quiz.append(dossier);
+        quiz.append(list);
       }
-      const source = node('a', item.label, 'quiz-source');
-      source.href = item.source;
-      source.target = '_blank';
-      source.rel = 'noopener noreferrer';
-      quiz.append(source);
-      result.focus();
+      if (item.source) {
+        const link = node('a', item.label, 'quiz-source');
+        link.href = item.source;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        quiz.append(link);
+      }
+      const back = node('button', 'Revoir les choix', 'btn secondary');
+      back.onclick = () => { quiz.replaceChildren(instruction, choices); choices.firstChild.focus(); };
+      const done = node('button', 'Retour à l’ascension', 'btn primary');
+      done.onclick = () => dialog.close();
+      const actions = node('div', '', 'discovery-actions');
+      actions.append(back, done);
+      quiz.append(actions);
+      heading.focus();
     }
-
-    function showQuestion(index) {
-      const question = item.questions[index];
-      const last = index === item.questions.length - 1;
-      const progress = node('p', 'Question ' + (index + 1) + ' sur ' + item.questions.length, 'quiz-step');
-      const group = node('fieldset', '', 'quiz-options');
-      const prompt = node('legend', question.prompt);
-      group.append(prompt);
-      const feedback = node('p', '', 'quiz-feedback');
-      feedback.setAttribute('role', 'status');
-      const onward = node('button', last ? (item.dossier ? 'Ouvrir la découverte' : 'Débloquer la ressource') : 'Question suivante', 'btn primary quiz-next');
-      onward.type = 'button';
-      onward.hidden = true;
-      onward.addEventListener('click', () => last ? reveal() : showQuestion(index + 1));
-      let answered = false;
-      const options = question.choices.map((choice, position) => {
-        const option = node('button', choice, 'quiz-option');
-        option.type = 'button';
-        option.addEventListener('click', () => {
-          if (answered) return;
-          answered = true;
-          const correct = position === question.correct;
-          options[question.correct].dataset.result = 'correct';
-          if (!correct) option.dataset.result = 'incorrect';
-          for (const button of options) button.setAttribute('aria-disabled', 'true');
-          feedback.textContent = (correct ? 'Bien joué ! ' : 'La réponse était « ' + question.choices[question.correct] + ' ». ') + question.explain;
-          onward.hidden = false;
-        });
-        group.append(option);
-        return option;
-      });
-      quiz.replaceChildren(progress, group, feedback, onward);
-      if (dialog.open) options[0].focus();
+    for (const [label, message] of [...Object.entries(item.choices), ['Je ne sais pas', item.unknown]]) {
+      const button = node('button', label, 'quiz-option');
+      button.onclick = () => discover(label === 'Je ne sais pas' ? 'Découverte' : label, message);
+      choices.append(button);
     }
-
-    const games = {
-      500: { name: 'La date mystère', intro: 'Deux habitants de Chamonix viennent de réussir la première ascension connue. Quelle année écris-tu dans leur carnet ?', number: 1786, unit: 'Année', hint: 'Trois ans avant la Révolution française.' },
-      1000: { name: 'Remonte le temps', intro: 'Touche les trois cordées dans l’ordre de leur arrivée au sommet, de la plus ancienne à la plus récente.', tiles: ['Henriette d’Angeville', 'Balmat et Paccard', 'Marie Paradis'], order: [1, 2, 0], clues: ['1786', '1808', '1838'] },
-      2000: { name: 'Au micro du commentateur', intro: 'À toi de commenter la compétition. Reconnais chaque discipline.', tiles: ['Bloc', 'Vitesse', 'Difficulté'], order: [1, 0, 2], clues: ['« Le chrono tourne, les deux adversaires filent sur des murs identiques ! »', '« Dernier mouvement au-dessus des tapis… les deux mains tiennent la prise finale ! »', '« La corde suit chaque mouvement. Jusqu’à quelle prise ira-t-elle ? »'] },
-      3000: { name: 'Le podium mystère', intro: 'Paris 2024. Retrouve les deux champions olympiques du combiné bloc-difficulté.', tiles: ['Toby Roberts', 'Janja Garnbret', 'Oriane Bertone'], order: [1, 0], clues: ['Podium féminin. Je suis slovène, déjà en or à Tokyo.', 'Podium masculin. Je suis britannique et je décroche mon premier titre olympique.'] },
-      4500: { name: 'À toi de guider', intro: 'À deux sur l’iPad. L’un lit l’indication à voix haute, l’autre touche la prise sur ce petit mur.', tiles: ['↖ Haut gauche', '↑ Haut centre', '↗ Haut droite', '← Milieu gauche', '● Centre', '→ Milieu droite'], order: [2, 3], clues: ['« Pars du centre. La prise est une rangée plus haut, sur ta droite. »', 'Échangez les rôles. « Depuis le centre, reste à la même hauteur et va à gauche. »'] },
-      4807: { name: 'Le mètre qui manque', intro: 'Au pied du mur de Vauban, ta cordée vise 4 807 m. Chaque voie ajoute 9 m. Quel est le plus petit nombre de voies qui permet de planter le drapeau ?', number: 535, unit: 'Nombre de voies', hint: 'Avec 534 voies, le compteur affiche 4 806 m…' }
-    };
-    const game = games[item.at];
-    if (game) {
-      const name = node('p', game.name, 'quiz-step');
-      const prompt = node('p', game.intro);
-      const field = node('fieldset', '', 'quiz-options');
-      const clue = node('legend', game.clues?.[0] || game.unit);
-      field.append(clue);
-      const feedback = node('p', '', 'quiz-feedback');
-      feedback.setAttribute('role', 'status');
-      const next = node('button', 'Découvrir la suite', 'btn primary');
-      next.hidden = true;
-      next.onclick = reveal;
-      function finish(message) {
-        field.disabled = true;
-        feedback.textContent = message;
-        next.hidden = false;
-      }
-      if (game.tiles) {
-        let step = 0;
-        const tiles = node('div', '', 'game-tiles');
-        if (item.at === 4500) tiles.classList.add('game-wall');
-        game.tiles.forEach((label, i) => {
-          const tile = node('button', label, 'quiz-option');
-          tile.onclick = () => {
-            if (i !== game.order[step]) {
-              feedback.textContent = 'Essaie une autre réponse pour cet indice.';
-              return;
-            }
-            tile.disabled = true;
-            tile.dataset.result = 'correct';
-            step++;
-            if (step === game.order.length) finish('Bien joué, la cordée ! ' + item.questions[0].explain);
-            else {
-              clue.textContent = game.clues[step];
-              feedback.textContent = 'Trouvé ! Indice suivant : ' + game.clues[step];
-            }
-          };
-          tiles.append(tile);
-        });
-        field.append(tiles);
-      } else {
-        const form = node('form');
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.inputMode = 'numeric';
-        input.pattern = '[0-9]+';
-        input.required = true;
-        input.setAttribute('aria-label', game.unit);
-        const check = node('button', 'Vérifier', 'btn primary');
-        form.append(input, check);
-        form.onsubmit = event => {
-          event.preventDefault();
-          const guess = Number(input.value);
-          if (guess === game.number) finish(item.questions.at(-1).explain);
-          else {
-            feedback.textContent = (guess < game.number ? 'Essaie un nombre plus grand. ' : 'Essaie un nombre plus petit. ') + game.hint;
-            input.select();
-          }
-        };
-        field.append(form);
-      }
-      quiz.replaceChildren(name, prompt, field, feedback, next);
-    } else showQuestion(0);
+    quiz.replaceChildren(instruction, choices);
     dialog.showModal();
   }
   const cards = bonus.map((item) => {
