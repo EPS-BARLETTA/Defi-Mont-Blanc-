@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 390" role="img" aria-label="Baudrier vu de face, suspendu par son pontet d’assurage au centre entre la ceinture et les cuissards.">
+  <defs>
+    <pattern id="grille" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#dedfe2" stroke-width="1.5"/>
+    </pattern>
+  </defs>
+  <rect width="360" height="390" rx="15" fill="#f5f5f1"/>
+  <rect x="18" y="18" width="324" height="302" fill="url(#grille)" stroke="#d2d3d7"/>
+  <rect x="18" y="38" width="324" height="18" rx="3" fill="#b8bdc3"/>
+  <!-- Ceinture et deux cuissards, vus de face. -->
+  <path d="M55 79Q180 62 305 79L300 112Q180 102 60 112Z" fill="#404c5e" stroke="#222b37" stroke-width="4"/>
+  <path d="M62 96Q180 84 298 96" fill="none" stroke="#767e89" stroke-width="10"/>
+  <rect x="235" y="87" width="26" height="18" rx="3" fill="none" stroke="#bacd47" stroke-width="4"/>
+  <path d="M177 154Q142 171 108 198M182 154Q217 171 251 198" fill="none" stroke="#616f80" stroke-width="12" stroke-linecap="round"/>
+  <path d="M105 190C62 188 55 225 73 262C92 295 133 281 145 242C153 217 139 194 105 190Z M255 190C298 188 305 225 287 262C268 295 227 281 215 242C207 217 221 194 255 190Z" fill="none" stroke="#303b4d" stroke-width="15"/>
+  <path d="M165 98Q180 104 195 98M163 162Q180 155 197 162" fill="none" stroke="#303b4d" stroke-width="10" stroke-linecap="round"/>
+  <!-- Le crochet est visible dans l’ouverture du pontet, devant le baudrier. -->
+  <path d="M208 47H215V118Q215 139 198 139H174Q163 139 163 131V124" fill="none" stroke="#48515a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M208 47H215V118Q215 139 198 139H174Q163 139 163 131V124" fill="none" stroke="#aeb7c0" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="169" y="97" width="21" height="67" rx="10.5" fill="none" stroke="#007a90" stroke-width="8"/>
+  <path d="M192 156H201V312L180 332" fill="none" stroke="#007a90" stroke-width="2"/>
+  <circle cx="192" cy="156" r="3.5" fill="#007a90"/>
+  <text x="180" y="355" fill="#00536a" font-family="system-ui,sans-serif" font-size="20" text-anchor="middle" font-weight="700">Pontet d’assurage</text>
+  <text x="180" y="376" fill="#394754" font-family="system-ui,sans-serif" font-size="13" text-anchor="middle">Vue de face</text>
+</svg>

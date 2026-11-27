@@ -1,4 +1,4 @@
-import { bonus } from './bonus.js?v=7';
+import { bonus } from './bonus.js?v=8';
 
 const goal = 4807;
 const main = document.querySelector('#main');
@@ -90,11 +90,6 @@ function publicPage(demo = false) {
             <svg viewBox="0 0 720 583" preserveAspectRatio="none" aria-hidden="true">
               <path id="trail" class="route" d="M 178 577 L 141 569 L 104 563 L 88 552 L 105 529 L 125 507 L 143 476 L 154 456 L 177 448 L 192 437 L 193 420 L 188 403 L 195 390 L 210 381 L 212 366 L 211 341 L 208 319 L 202 297 L 194 278 L 188 268 L 211 260 L 244 256 L 273 255 L 299 244 L 320 223 L 349 202 L 379 186 L 410 172 L 432 157 L 458 136 L 477 122 L 499 112 L 512 94 L 530 78 L 520 69 L 505 60"/>
               <circle id="pin" class="pin" cx="178" cy="577" r="6" hidden/>
-              <g id="summit-flag" class="summit-flag" hidden>
-                <path class="summit-pole" d="M505 61V15"/>
-                <path class="summit-pennant" d="M507 17 C528 11 549 23 571 17 L568 32 L572 45 C549 51 528 39 507 45Z"/>
-                <text x="537" y="34" class="summit-flag-name">AS VAUBAN</text>
-              </g>
             </svg>
           </div>
           <figcaption>
@@ -137,14 +132,15 @@ function publicPage(demo = false) {
   const dialog = main.querySelector('#bonus-dialog');
   const quiz = main.querySelector('#bonus-quiz');
   function openBonus(item) {
+    const icon = item.icon ? item.icon + ' ' : '';
     main.querySelector('#bonus-date').textContent = whole(item.at) + ' m · ' + item.kind;
-    main.querySelector('#bonus-title').textContent = item.title;
+    main.querySelector('#bonus-title').textContent = icon + item.title;
 
     const instruction = node('p', item.hint);
     const choices = node('div', '', 'game-tiles');
     function photo(key, alt) {
       const img = document.createElement('img');
-      img.src = '/materiel/' + key + '.webp';
+      img.src = key === 'baudriers-ranges' ? '/materiel/baudriers-ranges.svg' : '/materiel/' + key + '.webp';
       img.alt = alt;
       img.className = 'equipment-photo';
       return img;
@@ -153,13 +149,36 @@ function publicPage(demo = false) {
       const heading = node('h3', label, 'quiz-step');
       heading.tabIndex = -1;
       quiz.replaceChildren(heading, node('p', message));
+      if (item.fact) {
+        const fact = node('div', '', 'quiz-fact');
+        fact.append(node('strong', '📌 À retenir'), node('p', item.fact));
+        quiz.append(fact);
+      }
       if (item.revealPhoto) {
-        const captions = { corde: 'Étiquette de la corde orange du lycée', mur: 'Le mur de Vauban pour ton défi en binôme', baudriers: 'Les baudriers de ta cordée au lycée' };
+        const captions = { corde: 'Étiquette de la corde orange du lycée', mur: 'Le mur de Vauban pour ton défi en binôme' };
         const figure = node('figure');
         figure.append(photo(item.revealPhoto, captions[item.revealPhoto]), node('figcaption', captions[item.revealPhoto]));
         quiz.append(figure);
       }
       if (item.wallGear) {
+        const storage = node('section', '', 'harness-storage');
+        storage.append(node('h3', 'Après la grimpe, place au rangement'));
+        const comparison = node('div', '', 'harness-comparison');
+        for (const [key, caption] of [
+          ['baudriers', 'Avant · Je crois que niveau rangement, on va pouvoir faire mieux !'],
+          ['baudriers-ranges', 'Rangement · Le crochet passe dans le pontet, repéré en bleu.']
+        ]) {
+          const figure = node('figure');
+          figure.append(photo(key, caption), node('figcaption', caption));
+          if (key === 'baudriers') {
+            const skull = node('span', '💀', 'harness-skull');
+            skull.setAttribute('aria-hidden', 'true');
+            figure.append(skull);
+          }
+          comparison.append(figure);
+        }
+        storage.append(comparison, node('p', 'À Vauban, suspends ton baudrier par le pontet d’assurage : c’est la boucle textile à l’avant, entre les deux points d’encordement.'));
+        quiz.append(storage);
         quiz.append(node('h3', 'Sur le mur, que reconnais-tu ?'));
         const gallery = node('div', '', 'game-tiles');
         for (const [key, name, detail] of [
@@ -184,9 +203,10 @@ function publicPage(demo = false) {
         }
         quiz.append(list);
       }
-      if (item.source) {
-        const link = node('a', item.label, 'quiz-source');
-        link.href = item.source;
+      const sources = item.choiceSources?.[label] ?? item.sources ?? (item.source ? [[item.label, item.source]] : []);
+      for (const [name, url] of sources) {
+        const link = node('a', name, 'quiz-source');
+        link.href = url;
         link.target = '_blank';
         link.rel = 'noopener noreferrer';
         quiz.append(link);
@@ -202,6 +222,7 @@ function publicPage(demo = false) {
     }
     for (const [label, message] of [...Object.entries(item.choices), ['Je ne sais pas', item.unknown]]) {
       const button = node('button', label, 'quiz-option');
+      if (label === 'Je ne sais pas') button.classList.add('ghost');
       const key = item.photos?.[Object.keys(item.choices).indexOf(label)];
       if (key) button.prepend(photo(key, ''));
       button.onclick = () => discover(label === 'Je ne sais pas' ? 'Découverte' : label, message);
@@ -214,7 +235,7 @@ function publicPage(demo = false) {
     const button = node('button', '', 'bonus-card');
     button.type = 'button';
     button.append(node('small', item.at === goal ? 'Sommet · 4 807 m' : whole(item.at) + ' m'),
-      node('b', item.kind), node('span', 'À débloquer', 'state'));
+      node('b', (item.icon ? item.icon + ' ' : '') + item.kind), node('span', 'À débloquer', 'state'));
     button.dataset.open = false;
     button.disabled = true;
     button.addEventListener('click', () => openBonus(item));
@@ -250,10 +271,9 @@ function publicPage(demo = false) {
     main.querySelector('#meta').replaceChildren(node('strong', status), node('span', demo ? 'Progression simulée' : routes + ' · ' + sessions));
     const pin = main.querySelector('#pin');
     const caption = main.querySelector('#map-caption');
-    if (reached) caption.textContent = 'Le drapeau de l’AS Vauban est planté au sommet du Mont Blanc.';
+    if (reached) caption.textContent = 'L’AS Escalade Vauban a atteint le sommet du Mont Blanc.';
     else caption.textContent = 'Voie royale du Goûter · ' + (meters < 2372 ? whole(2372 - meters) + ' m jusqu’au Nid d’Aigle' : 'progression de l’AS Escalade Vauban');
-    pin.toggleAttribute('hidden', meters < 2372 || reached);
-    main.querySelector('#summit-flag').toggleAttribute('hidden', !reached);
+    pin.toggleAttribute('hidden', meters < 2372);
     if (meters >= 2372) {
       const i = calibration.findIndex(([altitude]) => altitude >= meters);
       const [end, to] = calibration[i];
@@ -277,7 +297,7 @@ function publicPage(demo = false) {
       const open = meters >= bonus[i].at;
       card.disabled = !open;
       card.dataset.open = open;
-      card.querySelector('b').textContent = open ? bonus[i].title : bonus[i].kind;
+      card.querySelector('b').textContent = (bonus[i].icon ? bonus[i].icon + ' ' : '') + (open ? bonus[i].title : bonus[i].kind);
       card.querySelector('.state').textContent = open ? 'Relever le défi' : 'À débloquer';
     });
     const opened = bonus.filter(item => item.at <= meters).length;
@@ -287,7 +307,7 @@ function publicPage(demo = false) {
     const feature = main.querySelector('#bonus-feature');
     if (latest !== highlighted) {
       const eyebrow = node('p', latest ? whole(latest.at) + ' m · ' + latest.kind : 'Premier bonus', 'overline');
-      const title = node('h3', latest ? latest.title : whole(next.at) + ' m');
+      const title = node('h3', latest ? (latest.icon ? latest.icon + ' ' : '') + latest.title : whole(next.at) + ' m');
       const status = node('p', '', 'bonus-feature-status');
       status.id = 'bonus-status';
       feature.replaceChildren(eyebrow, title, status);

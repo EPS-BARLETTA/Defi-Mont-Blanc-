@@ -11,7 +11,7 @@ const assets = {
   '/logo-as-vauban.png': ['logo-as-vauban.png', 'image/png'],
 };
 for (const file of await readdir('public/materiel')) {
-  assets['/materiel/' + file] = ['materiel/' + file, 'image/webp'];
+  assets['/materiel/' + file] = ['materiel/' + file, (file.endsWith('.svg') ? 'image/svg+xml' : 'image/webp')];
 }
 const embedded = Object.fromEntries(await Promise.all(Object.entries(assets).map(async ([path, [file, type]]) =>
   [path, { type, data: (await readFile('public/' + file)).toString('base64') }],
